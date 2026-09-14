@@ -1,0 +1,1958 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>今日これだけ。</title>
+<style>
+:root{
+  --bg:#fcf7f8;
+  --surface:#fffdfd;
+  --green:#7fc6a4;
+  --green-dark:#5fa784;
+  --green-soft:#eef8f2;
+  --text:#4e4a53;
+  --muted:#9a9098;
+  --line:#f1e4e8;
+  --orange:#f5b67b;
+  --red:#e58c95;
+  --shadow:0 10px 26px rgba(181,132,151,.10);
+}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#fff8fa,#f9f5f7 52%,#f6fbf8 100%);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",sans-serif;color:var(--text)}
+.phone{max-width:430px;margin:0 auto;min-height:100dvh;background:var(--surface);padding-bottom:calc(88px + env(safe-area-inset-bottom));padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+header{position:sticky;top:0;z-index:10;background:rgba(255,253,253,.96);padding:calc(16px + env(safe-area-inset-top)) 18px 12px;border-bottom:1px solid #f3e7eb;backdrop-filter:blur(10px)}
+.header-row{display:flex;justify-content:space-between;align-items:center}.brand{font-weight:900;font-size:19px;letter-spacing:.02em}.date{font-size:11px;color:var(--muted)}
+main{padding:16px}.screen{display:none}.screen.active{display:block}
+.hero-photo{height:300px;border-radius:34px;position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(122,81,103,.28)),linear-gradient(155deg,#f9e7ec 0%,#fff6f4 42%,#eaf6ee 100%);box-shadow:var(--shadow);margin-bottom:18px}
+.hero-photo:after{content:"";position:absolute;width:124px;height:168px;border-radius:60px 60px 22px 22px;background:linear-gradient(#e7c6cf,#b98da0);left:50%;bottom:24px;transform:translateX(-50%);box-shadow:0 10px 30px rgba(140,95,115,.18)}
+.hero-copy{position:absolute;left:22px;right:22px;bottom:20px;color:#fff;z-index:2}.hero-copy h1{margin:0 0 8px;font-size:30px;line-height:1.25;font-weight:900}.hero-copy p{font-size:12px;line-height:1.7;margin:0 0 12px}
+.btn{width:100%;border:0;border-radius:18px;padding:14px 16px;font-weight:900;font-size:15px;cursor:pointer}
+.btn.primary{background:linear-gradient(135deg,#f3b6c8,#89cfae);color:#fff}.btn.soft{background:#fdf0f3;color:#b36f88}.btn.ghost{background:#fff;border:1px solid var(--line);color:var(--text)}
+h2{font-size:20px;margin:2px 0 12px}h3{font-size:15px;margin:0 0 8px}.muted{font-size:12px;color:var(--muted)}
+.card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:16px;margin-bottom:13px;box-shadow:0 8px 24px rgba(173,132,147,.08)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:linear-gradient(180deg,#fffafb,#fbfffd);border-radius:18px;padding:12px;border:1px solid #f5eaee}.stat small{display:block;color:var(--muted);font-size:10px}.stat b{font-size:18px;display:block;margin-top:4px}
+.progress-ring{width:140px;height:140px;border-radius:50%;background:conic-gradient(#f2b5c5 0 36%, #88cfad 36% 68%, #f1eef0 68%);margin:10px auto;display:grid;place-items:center;position:relative}
+.progress-ring:before{content:"";width:108px;height:108px;background:#fff;border-radius:50%;position:absolute}.progress-ring .inner{position:relative;text-align:center;z-index:2}.progress-ring b{font-size:26px}.progress-ring span{display:block;font-size:10px;color:var(--muted)}
+.todo .item,.list .item{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #eef2ef}.todo .item:last-child,.list .item:last-child{border-bottom:0}
+.check{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:#fceef2;color:#bf7d94;font-size:13px;font-weight:900}
+.food-row{display:grid;grid-template-columns:70px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #eef2ef}.food-row:last-child{border-bottom:0}
+.food-img{height:58px;border-radius:16px;background:linear-gradient(135deg,#f7d2c6,#a9dbc0);position:relative;overflow:hidden}
+.food-img:after{content:"";position:absolute;width:30px;height:30px;border-radius:50%;background:#fff;left:14px;top:14px;box-shadow:12px -4px 0 #90c988,-10px 5px 0 #e4a55f}
+.pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#fdf0f3;color:#b36f88;font-size:10px;font-weight:800}
+.swap-old{background:#fff1ee;border-radius:18px;padding:14px}.swap-new{background:#eef9f2;border-radius:18px;padding:14px}.arrow{text-align:center;font-size:28px;color:var(--green);font-weight:900;padding:6px}
+.chart{height:160px;border-radius:20px;background:linear-gradient(to top,transparent 24%,#f5eaee 25%,transparent 26%,transparent 49%,#f5eaee 50%,transparent 51%,transparent 74%,#f5eaee 75%,transparent 76%),linear-gradient(180deg,#fffdfd,#fef8fa);position:relative;overflow:hidden}
+.chart svg{position:absolute;inset:0;width:100%;height:100%}
+.info-card{display:grid;grid-template-columns:46px 1fr;gap:12px;align-items:start;padding:13px 0;border-bottom:1px solid #eef2ef}.info-card:last-child{border-bottom:0}.iconbox{width:46px;height:46px;border-radius:16px;background:#fdf1f4;display:grid;place-items:center;font-size:22px}
+.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.lv{text-align:center;border:1px solid var(--line);border-radius:18px;padding:11px 6px}.lv.active{background:#fff1f5;border-color:#f2d6df}.lv b{display:block;font-size:18px;margin:4px 0}
+label{font-size:11px;color:var(--muted);display:block;margin:9px 0 5px}input,select{width:100%;padding:12px;border-radius:15px;border:1px solid var(--line);background:#fff;font-size:16px}
+.tabs{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,100%);display:grid;grid-template-columns:repeat(5,1fr);background:rgba(255,253,253,.97);border-top:1px solid var(--line);z-index:20;backdrop-filter:blur(10px);padding-bottom:env(safe-area-inset-bottom)}.tab{border:0;background:transparent;padding:9px 2px 11px;color:var(--muted);font-size:10px}.tab b{display:block;font-size:20px}.tab.active{color:#c07a93;font-weight:900}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin:18px 0 10px}.section-head h2{margin:0}.section-head span{font-size:11px;color:var(--muted)}
+.notice{background:#fff4f6;color:#9a6d7f;border-radius:16px;padding:11px;font-size:11px;line-height:1.6}
+#networkStatus{position:fixed;top:calc(8px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:120;max-width:calc(100% - 32px);padding:8px 12px;border-radius:999px;background:#5f5660;color:#fff;font-size:11px;font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,.14);text-align:center}#networkStatus[hidden]{display:none}#networkStatus[data-state="online"]{background:#557a63}
+.hidden{display:none}.center{text-align:center}
+.badge{display:inline-block;padding:5px 8px;border-radius:999px;background:#eef5ff;color:#42618b;font-size:10px;font-weight:800}
+.dayrow{display:grid;grid-template-columns:32px 1fr;gap:8px;align-items:center;margin:8px 0}
+.hero-copy h1,.section-head h2,.brand{letter-spacing:.01em}
+.card h3{color:#7f6b77}
+.muted strong{color:#b17a8f}
+
+.today-hero{
+  position:relative;
+  overflow:hidden;
+  border-radius:30px;
+  padding:22px 20px 20px;
+  margin-bottom:14px;
+  background:
+    radial-gradient(circle at 88% 18%, rgba(255,255,255,.9) 0 10%, transparent 11%),
+    radial-gradient(circle at 12% 16%, rgba(255,255,255,.45) 0 8%, transparent 9%),
+    linear-gradient(145deg,#f9dce7 0%, #fff7f8 40%, #edf8f1 100%);
+  border:1px solid #f5e6eb;
+  box-shadow:0 16px 38px rgba(193,137,157,.16);
+}
+.today-hero::before{
+  content:"";
+  position:absolute;
+  right:-28px;
+  top:-24px;
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  background:rgba(255,255,255,.32);
+}
+.today-hero::after{
+  content:"";
+  position:absolute;
+  left:-18px;
+  bottom:-28px;
+  width:96px;
+  height:96px;
+  border-radius:50%;
+  background:rgba(162,214,184,.18);
+}
+.today-mini{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:7px 11px;
+  border-radius:999px;
+  background:rgba(255,255,255,.7);
+  color:#b9778e;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.08em;
+  backdrop-filter:blur(8px);
+}
+.today-title{
+  font-size:32px;
+  line-height:1.18;
+  margin:12px 0 8px;
+  font-weight:900;
+  color:#695866;
+}
+.today-copy{
+  color:#938792;
+  font-size:12px;
+  line-height:1.8;
+  margin-bottom:14px;
+}
+.today-focus{
+  position:relative;
+  z-index:1;
+  background:rgba(255,255,255,.78);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.85);
+  border-radius:24px;
+  padding:16px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8);
+}
+.today-focus-label{
+  font-size:11px;
+  color:#ab7a8d;
+  font-weight:800;
+  letter-spacing:.06em;
+}
+.today-mission{
+  font-size:23px;
+  line-height:1.35;
+  font-weight:900;
+  color:#564852;
+  margin:6px 0 12px;
+}
+.today-sub{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.soft-chip{
+  padding:6px 10px;
+  border-radius:999px;
+  background:#fff4f7;
+  color:#b2778d;
+  font-size:10px;
+  font-weight:800;
+}
+.pretty-btn{
+  background:linear-gradient(135deg,#efb2c5,#95d2b0);
+  box-shadow:0 12px 24px rgba(193,137,157,.18);
+}
+.pretty-btn:hover{filter:brightness(.99)}
+
+
+/* ==========================================================
+   APPROVED MASTER DESIGN FREEZE v1
+   Source of truth: user-approved 11-screen visual reference.
+   Functional logic must not change these visual tokens casually.
+   ========================================================== */
+:root{
+  --approved-ink:#163250;
+  --approved-muted:#718098;
+  --approved-line:#e5edf2;
+  --approved-bg:#f7fbfc;
+  --approved-pink:#ff6f91;
+  --approved-pink-soft:#fff0f4;
+  --approved-pink-card:#fff5f7;
+  --approved-green:#34b777;
+  --approved-green-dark:#249b63;
+  --approved-green-soft:#e9f8ef;
+  --approved-mint:#dff5eb;
+  --approved-blue-soft:#ebf7ff;
+  --approved-orange-soft:#fff1e3;
+  --approved-shadow:0 10px 28px rgba(36,70,92,.09);
+}
+body[data-design-freeze="approved-master-v1"]{
+  background:linear-gradient(180deg,#f5fbfd 0%,#ffffff 100%);
+  color:var(--approved-ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;
+}
+body[data-design-freeze="approved-master-v1"] .phone{
+  background:#fff;
+  box-shadow:0 0 0 1px #eef2f4;
+}
+body[data-design-freeze="approved-master-v1"] header{
+  background:rgba(255,255,255,.96);
+  border-bottom:1px solid var(--approved-line);
+}
+body[data-design-freeze="approved-master-v1"] .brand{
+  font-family:"Yu Mincho","Hiragino Mincho ProN",serif;
+  font-size:25px;
+  color:var(--approved-ink);
+  font-weight:900;
+}
+body[data-design-freeze="approved-master-v1"] .date,
+body[data-design-freeze="approved-master-v1"] .muted,
+body[data-design-freeze="approved-master-v1"] label{
+  color:var(--approved-muted);
+}
+body[data-design-freeze="approved-master-v1"] .card{
+  border:1px solid var(--approved-line);
+  border-radius:18px;
+  box-shadow:var(--approved-shadow);
+  background:#fff;
+}
+body[data-design-freeze="approved-master-v1"] .stat{
+  border:1px solid var(--approved-line);
+  border-radius:16px;
+  background:#fff;
+}
+body[data-design-freeze="approved-master-v1"] .btn{
+  border-radius:16px;
+  min-height:48px;
+}
+body[data-design-freeze="approved-master-v1"] .btn.primary{
+  background:linear-gradient(90deg,var(--approved-green),#27a769);
+  box-shadow:0 7px 14px rgba(52,183,119,.22);
+}
+body[data-design-freeze="approved-master-v1"] .btn.soft{
+  background:var(--approved-pink-soft);
+  color:#d84c70;
+}
+body[data-design-freeze="approved-master-v1"] .btn.ghost{
+  border-color:var(--approved-line);
+  color:var(--approved-ink);
+}
+body[data-design-freeze="approved-master-v1"] .tabs{
+  background:rgba(255,255,255,.97);
+  border-top:1px solid var(--approved-line);
+  height:72px;
+}
+body[data-design-freeze="approved-master-v1"] .tab{
+  color:#7b8795;
+  padding:8px 2px 10px;
+}
+body[data-design-freeze="approved-master-v1"] .tab.active{
+  color:var(--approved-green);
+}
+body[data-design-freeze="approved-master-v1"] .tab b{
+  font-size:19px;
+}
+body[data-design-freeze="approved-master-v1"] input,
+body[data-design-freeze="approved-master-v1"] select{
+  border:1px solid var(--approved-line);
+  border-radius:12px;
+  color:var(--approved-ink);
+  background:#fff;
+}
+body[data-design-freeze="approved-master-v1"] .notice{
+  background:var(--approved-orange-soft);
+  color:#8a6a48;
+}
+
+/* Home: approved image hierarchy = greeting -> today's mission -> metrics/records. */
+body[data-design-freeze="approved-master-v1"] #home.active{
+  display:flex;
+  flex-direction:column;
+}
+body[data-design-freeze="approved-master-v1"] #home > *{order:20}
+body[data-design-freeze="approved-master-v1"] #home .approved-home-greeting{order:1}
+body[data-design-freeze="approved-master-v1"] #home .today-hero{order:2}
+body[data-design-freeze="approved-master-v1"] #home > .section-head:first-of-type{order:3}
+body[data-design-freeze="approved-master-v1"] #home > .section-head:first-of-type + .card{order:4}
+body[data-design-freeze="approved-master-v1"] #home > .card.todo{order:5}
+body[data-design-freeze="approved-master-v1"] #home > .grid2{order:6}
+body[data-design-freeze="approved-master-v1"] #home > .card{order:7}
+body[data-design-freeze="approved-master-v1"] #home > .btn.primary:last-child{order:30}
+
+body[data-design-freeze="approved-master-v1"] .approved-home-greeting{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:2px 0 14px;
+}
+body[data-design-freeze="approved-master-v1"] .approved-avatar{
+  width:42px;height:42px;border-radius:50%;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,#ffd7e3,#dff5eb);
+  font-size:22px;
+}
+body[data-design-freeze="approved-master-v1"] .approved-goodmorning{
+  font-size:11px;color:var(--approved-muted);
+}
+body[data-design-freeze="approved-master-v1"] .approved-user{
+  font-size:15px;font-weight:900;color:var(--approved-ink);
+}
+
+/* Approved mission hero */
+body[data-design-freeze="approved-master-v1"] .today-hero{
+  border-radius:26px;
+  padding:18px;
+  background:linear-gradient(135deg,#fff3f6 0%,#f0fbf5 100%);
+  border:1px solid #f3e6e8;
+  box-shadow:0 12px 30px rgba(80,100,90,.08);
+}
+body[data-design-freeze="approved-master-v1"] .today-mini{
+  background:rgba(255,255,255,.82);
+  color:var(--approved-pink);
+  font-weight:900;
+  letter-spacing:.08em;
+}
+body[data-design-freeze="approved-master-v1"] .today-title{
+  font-family:"Yu Mincho","Hiragino Mincho ProN",serif;
+  font-size:30px;
+  color:var(--approved-ink);
+}
+body[data-design-freeze="approved-master-v1"] .today-copy{
+  color:var(--approved-muted);
+}
+body[data-design-freeze="approved-master-v1"] .today-focus{
+  background:rgba(255,255,255,.88);
+  border:1px solid rgba(255,255,255,.96);
+  border-radius:20px;
+  box-shadow:0 8px 20px rgba(36,70,92,.06);
+}
+body[data-design-freeze="approved-master-v1"] .today-focus-label{
+  color:#d85f7c;
+}
+body[data-design-freeze="approved-master-v1"] .today-mission{
+  color:var(--approved-ink);
+}
+body[data-design-freeze="approved-master-v1"] .soft-chip{
+  background:var(--approved-pink-soft);
+  color:#d84c70;
+}
+body[data-design-freeze="approved-master-v1"] .pretty-btn{
+  background:linear-gradient(90deg,#ff6689,#ff7899);
+  box-shadow:0 7px 14px rgba(255,111,145,.22);
+}
+
+/* Record: approved pink photo / mint manual split. */
+body[data-design-freeze="approved-master-v1"] #record > .row{
+  gap:12px !important;
+}
+body[data-design-freeze="approved-master-v1"] #record > .row .btn.primary{
+  background:linear-gradient(135deg,#ff6c8e,#ff8aa5);
+}
+body[data-design-freeze="approved-master-v1"] #record > .row .btn.soft{
+  background:linear-gradient(135deg,#c9f1de,#9ee0bf);
+  color:var(--approved-ink);
+}
+body[data-design-freeze="approved-master-v1"] .pill{
+  background:var(--approved-pink-soft);
+  color:#d84c70;
+}
+body[data-design-freeze="approved-master-v1"] .swap-new{
+  background:var(--approved-green-soft);
+}
+body[data-design-freeze="approved-master-v1"] .swap-old{
+  background:var(--approved-pink-card);
+}
+
+/* Approved screen cards stay soft, white and airy. */
+body[data-design-freeze="approved-master-v1"] .iconbox{
+  background:var(--approved-pink-soft);
+}
+body[data-design-freeze="approved-master-v1"] .lv.active{
+  background:var(--approved-pink-card);
+  border-color:#ffc2d0;
+}
+body[data-design-freeze="approved-master-v1"] .progress-ring{
+  background:conic-gradient(var(--approved-pink) 0 36%,var(--approved-green) 36% 68%,#eef3f5 68%);
+}
+
+</style>
+<style id="mobile-runtime-v66">
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+button,.tab,input,select,label{-webkit-tap-highlight-color:transparent}
+button,.tab{touch-action:manipulation}
+@supports(padding:max(0px)){
+  body{padding-left:max(0px,env(safe-area-inset-left));padding-right:max(0px,env(safe-area-inset-right))}
+}
+</style>
+
+
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#21b55b">
+<meta name="description" content="今日の小さな一歩を積み重ねる、食事・体重・習慣のシンプル記録アプリ。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="今日これだけ。">
+<meta property="og:description" content="食事・体重・習慣をやさしく記録。友達と試せるシンプルなダイエット習慣アプリ。">
+<meta property="og:image" content="assets/share-preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="assets/favicon-64.png">
+<meta name="theme-color" content="#f7dfe8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="今日これだけ">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+
+</head>
+<body data-design-freeze="approved-master-v1">
+<div id="networkStatus" role="status" aria-live="polite" hidden></div>
+<div class="phone">
+<header>
+  <div class="header-row"><div class="brand">今日これだけ。</div><div class="date" id="headerDate"></div></div>
+</header>
+
+<main>
+
+<section id="onboarding" class="screen">
+  <div class="hero-photo">
+    <div class="hero-copy">
+      <h1>今日これだけ。</h1>
+      <p>やさしく整えて、きれいに続ける。小さな成功を積み重ねるダイエットアプリ。</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="info-card"><div class="iconbox">①</div><div><b>まずは簡単に</b><div class="muted">最初の目標は「これなら失敗しない」レベルまで小さく。</div></div></div>
+    <div class="info-card"><div class="iconbox">②</div><div><b>記録して気づく</b><div class="muted">食事・体重・空腹・運動を少しずつ記録。</div></div></div>
+    <div class="info-card"><div class="iconbox">③</div><div><b>少しだけ強くする</b><div class="muted">成功が続いたらLEVEL UP。難しければEASYに戻る。</div></div></div>
+    <button class="btn primary" style="margin-top:10px" onclick="goOnboardingNext()">3分で設定する</button>
+  </div>
+</section>
+
+<section id="setup" class="screen">
+  <div class="section-head"><h2>最初の設定</h2><span>TDEE・目標</span></div>
+  <div class="card">
+    <label>性別</label><select id="sSex"><option value="male">男性</option><option value="female">女性</option></select>
+    <label>年齢</label><input id="sAge" type="number" value="30">
+    <label>身長(cm)</label><input id="sHeight" type="number" value="170">
+    <label>現在体重(kg)</label><input id="sWeight" type="number" value="70">
+    <label>目標体重(kg)</label><input id="sTarget" type="number" value="60">
+    <label>活動量</label><select id="sActivity"><option value="1.2">低い</option><option value="1.375">やや低い</option><option value="1.55" selected>普通</option><option value="1.725">高い</option></select>
+  </div>
+  <div class="card">
+    <h3>最初の「今日これだけ」</h3>
+    <select id="starterMission">
+      <option>夕食を写真で1枚記録する</option>
+      <option>体重計に乗るだけ</option>
+      <option>1分だけ歩く</option>
+      <option>水を1杯飲む</option>
+    </select>
+    <button class="btn primary" style="margin-top:10px" onclick="finishSetup()">この内容で始める</button>
+  </div>
+</section>
+
+<section id="start" class="screen">
+  <div class="hero-photo">
+    <div class="hero-copy">
+      <h1>変わるのは、<br>わたしをいたわる毎日から。</h1>
+      <p>がんばりすぎず、きれいに整える。続けやすさを大切にしたダイエットへ。</p>
+      <button class="btn primary" onclick="go('home')">はじめる</button>
+    </div>
+  </div>
+  <div class="muted" style="text-align:center">やさしく整えて、無理なく続ける。</div>
+</section>
+
+<section id="home" class="screen">
+  <div class="approved-home-greeting">
+    <div class="approved-avatar">👩🏻</div>
+    <div>
+      <div class="approved-goodmorning">おはようございます</div>
+      <div class="approved-user">今日も、小さく進めましょう。</div>
+    </div>
+  </div>
+  <div class="section-head"><h2>今日のコンディション</h2><span>今週のバランス</span></div>
+  <div class="card">
+    <div class="progress-ring" id="ring">
+      <div class="inner"><b id="weeklyDelta">--</b><span>今週の変化</span></div>
+    </div>
+    <div class="grid3">
+      <div class="stat"><small>体重7日平均</small><b id="homeWeight">--</b></div>
+      <div class="stat"><small>TDEE</small><b id="homeTdee">--</b></div>
+      <div class="stat"><small>摂取</small><b id="todayKcal">0</b></div>
+    </div>
+  </div>
+
+  <div class="card todo">
+    <h3>今日のやること</h3>
+    <div class="item"><div style="display:flex;gap:10px;align-items:center"><span class="check" id="missionCheck">○</span><span>今日これだけを達成する</span></div></div>
+    <div class="item"><div style="display:flex;gap:10px;align-items:center"><span class="check">✓</span><span>水を1.5L飲む</span></div></div>
+    <div class="item"><div style="display:flex;gap:10px;align-items:center"><span class="check">○</span><span>軽い運動をする</span></div></div>
+  </div>
+
+
+  <div class="card">
+    <div class="section-head" style="margin:0 0 8px"><h3>今週の記録</h3><span>7日間</span></div>
+    <div id="weekCalendar" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px"></div>
+  </div>
+
+
+  <div class="grid2" style="margin-bottom:12px">
+    <div class="stat"><small>継続スコア</small><b id="continuityScore">0</b><div class="muted">連続日数ではなく「戻ってきた回数」も評価</div></div>
+    <div class="stat"><small>目標予測</small><b id="goalForecast">--</b><div class="muted">現在の傾向から参考表示</div></div>
+  </div>
+
+  <div class="card">
+    <div class="section-head" style="margin:0 0 8px"><h3>現在の成長レベル</h3><span id="levelText">Lv.1</span></div>
+    <div class="progress"><span id="levelBar" style="display:block;height:100%;background:var(--green);width:20%"></span></div>
+    <div class="muted" id="levelMessage" style="margin-top:8px">まずは3回成功を作ります。</div>
+  </div>
+
+
+  <div class="card">
+    <div class="section-head" style="margin:0 0 8px"><h3>今週のステータス</h3><span>記録</span></div>
+    <div class="grid3">
+      <div class="stat"><small>プロフィール</small><b id="statusProfile">✓</b></div>
+      <div class="stat"><small>食事記録</small><b id="statusMeals">0</b></div>
+      <div class="stat"><small>体重記録</small><b id="statusWeights">0</b></div>
+    </div>
+    <div class="muted" style="margin-top:8px">入力 → 保存 → 分析 → 次の行動提案までを、この版で検証できます。</div>
+  </div>
+
+  <div class="today-hero">
+    <span class="today-mini">TODAY'S FOCUS</span>
+    <div class="today-title">今日はこれだけ。</div>
+    <div class="today-copy">がんばりすぎず、でも前に進む。今日のわたしにちょうどいい、最小の一歩を提案します。</div>
+
+    <div class="today-focus">
+      <div class="today-focus-label">ONE SIMPLE ACTION</div>
+      <div class="today-mission" id="missionText">食事を1回だけ記録する</div>
+      <div class="today-sub">
+        <span class="soft-chip">完璧じゃなくてOK</span>
+        <span class="soft-chip">最小行動で成功体験</span>
+      </div>
+      <div id="autoMissionReason" class="muted" style="margin-bottom:12px">記録状況から、今日の最小行動を選びます。</div>
+      <button class="btn primary pretty-btn" onclick="completeMission()">できた！</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>今日のクイック記録</h3>
+    <div class="grid2">
+      <div>
+        <label>体重(kg)</label>
+        <input id="quickWeight" type="number" min="30" max="300" step="0.1" inputmode="decimal" placeholder="例：69.8">
+      </div>
+      <div>
+        <label>運動消費(kcal)</label>
+        <input id="quickExercise" type="number" min="0" max="5000" step="1" inputmode="numeric" placeholder="例：350">
+      </div>
+    </div>
+    <button class="btn soft" style="margin-top:10px" onclick="saveQuickDaily()">保存して反映</button>
+  </div>
+
+  <div class="card">
+    <h3>今日のカロリー収支</h3>
+    <div class="grid2">
+      <div class="stat"><small>総消費</small><b id="homeBurn">--</b></div>
+      <div class="stat"><small>摂取</small><b id="homeIntake">0</b></div>
+      <div class="stat"><small>収支</small><b id="homeBalance">--</b></div>
+      <div class="stat"><small>状態</small><b id="homeBalanceStatus">--</b></div>
+    </div>
+    <button class="btn ghost" style="margin-top:10px" onclick="openCalBalance()">詳しく見る</button>
+  </div>
+
+  <button class="btn primary" onclick="go('record')">＋ 食事を記録</button>
+</section>
+
+<section id="record" class="screen">
+  <div class="section-head"><h2>食事記録</h2><span>記録 / アドバイス</span></div>
+  <div class="row" style="display:flex;gap:10px;margin-bottom:12px">
+    <label class="btn primary" style="text-align:center;cursor:pointer;margin:0">
+      📷 写真を選ぶ
+      <input id="mealPhotoInput" type="file" accept="image/*" capture="environment" style="display:none" onchange="handleMealPhoto(event)">
+    </label>
+    <button class="btn soft" onclick="document.getElementById('manualBox').classList.toggle('hidden')">✏️ 手入力</button>
+  </div>
+
+  <div class="card">
+    <label>記録する日</label>
+    <input id="recordDate" type="date" onchange="render()">
+    <div id="photoPreviewWrap" class="hidden" style="margin-top:10px">
+      <img id="photoPreview" alt="食事写真" style="width:100%;height:210px;object-fit:cover;border-radius:18px">
+      <div class="muted" style="margin-top:8px">写真は記録用です。カロリーや栄養素の自動判定は行いません。</div><button class="btn primary" style="margin-top:10px" onclick="registerPhotoMeal()">この写真を記録</button>
+    </div>
+  </div>
+  <div id="manualBox" class="card hidden">
+    <label>食品名</label><input id="foodName" placeholder="例：焼き魚定食">
+    <label>カロリー</label><input id="foodKcal" type="number" min="0" max="10000" step="1" inputmode="numeric" placeholder="例：620">
+    <label>食事時刻</label><input id="foodTime" type="time">
+    <button class="btn primary" style="margin-top:10px" onclick="saveMeal()">保存</button>
+  </div>
+<div class="card">
+    <h3>食品検索 <span class="muted">（参考値）</span></h3>
+    <input id="foodSearch" placeholder="例：鶏むね肉、納豆、ごはん" oninput="searchFoodDB()">
+    <div id="foodSearchResults" style="margin-top:8px"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-head" style="margin:0 0 8px"><h3>この日の食事</h3><span>編集・削除できます</span></div>
+    <div id="mealList" class="muted">まだ記録はありません。</div>
+  </div>
+
+  <div class="card">
+    <h3>空腹・満足度</h3>
+    <label>食前の空腹度</label><input id="hunger" type="range" min="1" max="5" value="3" oninput="saveAppetite()">
+    <label>食後の満足度</label><input id="satiety" type="range" min="1" max="5" value="3" oninput="saveAppetite()">
+    <label>食べた理由</label>
+    <select id="reason" onchange="saveAppetite()">
+      <option>本当に空腹だった</option>
+      <option>時間だから</option>
+      <option>ストレス</option>
+      <option>暇だった</option>
+      <option>付き合い・外食</option>
+    </select>
+  </div>
+  <div class="card">
+    <h3>今日のPFC <span class="muted">（参考値を含む）</span></h3>
+    <div class="grid3">
+      <div class="stat"><small>たんぱく質</small><b id="proteinTotal">0g</b></div>
+      <div class="stat"><small>脂質</small><b id="fatTotal">0g</b></div>
+      <div class="stat"><small>炭水化物</small><b id="carbTotal">0g</b></div>
+    </div>
+  </div>
+  <div id="editMealBox" class="card hidden">
+    <h3>食事を編集</h3>
+    <input id="editMealId" type="hidden">
+    <label>食品名</label><input id="editMealName">
+    <label>カロリー</label><input id="editMealKcal" type="number" min="0" max="10000" step="1" inputmode="numeric">
+    <label>たんぱく質(g)</label><input id="editMealP" type="number" min="0" max="1000" step="0.1" inputmode="decimal">
+    <label>脂質(g)</label><input id="editMealF" type="number" min="0" max="1000" step="0.1" inputmode="decimal">
+    <label>炭水化物(g)</label><input id="editMealC" type="number" min="0" max="1000" step="0.1" inputmode="decimal">
+    <label>時刻</label><input id="editMealTime" type="time">
+    <div class="row" style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn primary" onclick="saveEditedMeal()">更新</button>
+      <button class="btn ghost" onclick="editMealBox.classList.add('hidden')">キャンセル</button>
+    </div>
+  </div>
+
+  <button class="btn soft" onclick="go('swap')">置き換え提案を見る</button>
+</section>
+
+<section id="swap" class="screen">
+  <div class="section-head"><h2>食材の置き換え提案</h2><span>我慢ではなく選択</span></div>
+  <div class="swap-old"><span class="pill" style="background:#ffe5df;color:#aa473d">よく選ばれる加工食品</span><h3 style="margin-top:8px">ポテトチップス</h3><div class="muted">食欲が続きやすい選択</div></div>
+  <div class="arrow">↓</div>
+  <div class="swap-new"><span class="pill">おすすめ候補</span>
+    <div class="info-card"><div class="iconbox">🌱</div><div><b>枝豆</b><div class="muted">食物繊維・たんぱく質を補いやすい</div></div></div>
+    <div class="info-card"><div class="iconbox">🥚</div><div><b>ゆで卵</b><div class="muted">シンプルで高たんぱく</div></div></div>
+    <div class="info-card"><div class="iconbox">🥛</div><div><b>無糖ヨーグルト</b><div class="muted">間食の置き換え候補</div></div></div>
+  </div>
+</section>
+
+<section id="analysis" class="screen">
+  <div class="section-head"><h2>週単位の管理</h2><span>体重 / カロリー</span></div>
+  <div class="card">
+    <div class="chart" id="weightChart">
+      <svg viewBox="0 0 300 160" preserveAspectRatio="none">
+        <polyline id="weightLine" points="" fill="none" stroke="#49b677" stroke-width="4"/>
+        <polyline id="trendLine" points="" fill="none" stroke="#9ecfb0" stroke-width="2" stroke-dasharray="5 5"/>
+      </svg>
+    </div>
+    <div class="muted" id="chartCaption" style="margin-top:8px">体重記録が2件以上でグラフを表示します。</div>
+    <div class="stat" style="margin-top:12px"><small>今週の判定</small><b id="analysisResult">準備中</b><div class="muted" id="analysisMessage">記録が増えるほど分析できます。</div></div>
+  </div>
+  <div class="grid2">
+    <div class="stat"><small>平均摂取</small><b id="avgKcal">0</b></div>
+    <div class="stat"><small>TDEE差</small><b id="tdeeDiff">--</b></div>
+  </div>
+
+  <div class="card">
+    <h3>体重 × 食事カロリー</h3>
+    <div class="chart">
+      <svg viewBox="0 0 300 160" preserveAspectRatio="none">
+        <polyline id="comboWeightLine" points="" fill="none" stroke="#49b677" stroke-width="4"/>
+        <polyline id="comboKcalLine" points="" fill="none" stroke="#f39b47" stroke-width="3"/>
+      </svg>
+    </div>
+    <div class="muted" id="comboChartCaption" style="margin-top:8px">同じ日の体重と摂取カロリーを比較します。</div>
+  </div>
+
+  <div class="card">
+    <h3>あなたの勝ちパターン</h3>
+    <div id="patternText" class="muted">まだ十分なデータがありません。</div>
+  </div>
+
+  <div class="card">
+    <h3>体重履歴</h3>
+    <div id="weightHistory" class="muted">まだ記録はありません。</div>
+  </div>
+
+  <div class="card">
+    <h3>次の1週間</h3>
+    <div id="autoPlan" class="notice">記録が増えると、自動で「維持 / 少しUP / EASY」を提案します。</div>
+  </div>
+</section>
+
+<section id="plan" class="screen">
+  <div class="section-head"><h2>習慣化</h2><span>If-Then</span></div>
+  <div class="card">
+    <h3>今日のスモールゴール</h3>
+    <div class="levels">
+      <div class="lv"><small>最低</small><b id="minGoal">1分</b><small>歩く</small></div>
+      <div class="lv active"><small>標準</small><b id="stdGoal">5分</b><small>歩く</small></div>
+      <div class="lv"><small>余裕</small><b id="plusGoal">10分</b><small>歩く</small></div>
+    </div>
+    <div class="row" style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn ghost" onclick="setMode('easy')">EASY</button>
+      <button class="btn soft" onclick="setMode('keep')">維持</button>
+      <button class="btn primary" onclick="setMode('up')">少しUP</button>
+    </div>
+    <div id="modeMsg" class="muted" style="margin-top:8px"></div>
+  </div>
+  <div class="card">
+    <h3>かんたん作成</h3>
+    <label>もし</label><select id="ifPreset"><option>夕食を食べたら</option><option>朝起きたら</option><option>仕事が終わったら</option></select>
+    <label>そのとき</label><select id="thenPreset"><option>食事を記録する</option><option>体重を測る</option><option>5分歩く</option></select>
+    <button class="btn soft" style="margin-top:10px" onclick="saveIfThen()">保存</button>
+    <hr style="border:none;border-top:1px solid #eef2ef;margin:14px 0">
+    <h3>自由入力</h3>
+    <input id="ifFree" placeholder="もし〜なら">
+    <input id="thenFree" placeholder="〜する" style="margin-top:8px">
+    <button class="btn ghost" style="margin-top:10px" onclick="saveFree()">保存</button>
+    <div id="ifResult" class="muted" style="margin-top:10px"></div>
+  </div>
+
+  <div class="card">
+    <h3>週間計画</h3>
+    <div id="weekPlan"></div>
+    <button class="btn soft" style="margin-top:8px" onclick="saveWeekPlan()">週間計画を保存</button>
+    <div class="notice" style="margin-top:10px">休養日も、食事を楽しむ日も、計画通りなら達成です。</div>
+  </div>
+
+  <div class="card">
+    <h3>自動リカバリー提案</h3>
+    <div id="recoverySuggestion" class="notice">記録から、軽めの日・休養日・食事を楽しむ日の候補を提案します。</div>
+    <button class="btn ghost" style="margin-top:10px" onclick="applyRecoverySuggestion()">提案を今週に反映</button>
+  </div>
+</section>
+
+
+
+<section id="calbalance" class="screen">
+  <div class="section-head"><h2>1日のカロリー収支</h2><span>基礎代謝＋運動−食事</span></div>
+
+  <div class="card">
+    <div class="notice">これは簡易収支です。「基礎代謝＋入力した運動消費」と食事を比べます。日常活動や食事誘発性熱産生まで含むTDEEとは別物です。</div>
+
+    <label>基礎代謝（BMR）</label>
+    <input id="cbBmr" type="number" placeholder="例：1500">
+
+    <label>運動で消費したカロリー</label>
+    <input id="cbExercise" type="number" placeholder="例：450">
+
+    <label>食事で摂取したカロリー</label>
+    <input id="cbFood" type="number" placeholder="例：1800">
+
+    <button class="btn primary" style="margin-top:12px" onclick="calcCalorieBalance()">計算する</button>
+  </div>
+
+  <div class="card">
+    <h3>計算結果</h3>
+    <div class="grid2">
+      <div class="stat"><small>総消費カロリー</small><b id="cbBurn">--</b></div>
+      <div class="stat"><small>摂取カロリー</small><b id="cbIntake">--</b></div>
+      <div class="stat"><small>今日の収支</small><b id="cbBalance">--</b></div>
+      <div class="stat"><small>状態</small><b id="cbStatus">--</b></div>
+    </div>
+    <div class="muted" id="cbAdvice" style="margin-top:10px">
+      総消費 = 基礎代謝 + 運動消費。収支 = 摂取 − 総消費。
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>計算式</h3>
+    <div class="info-card"><div class="iconbox">🔥</div><div><b>総消費カロリー</b><div class="muted">基礎代謝 + 運動カロリー</div></div></div>
+    <div class="info-card"><div class="iconbox">🍽️</div><div><b>エネルギー収支</b><div class="muted">食事カロリー − 総消費カロリー</div></div></div>
+    <div class="info-card"><div class="iconbox">📉</div><div><b>マイナスなら</b><div class="muted">その日は消費が摂取を上回っています。</div></div></div>
+  </div>
+
+  <button class="btn soft" onclick="go('home')">ホームへ戻る</button>
+</section>
+
+<section id="tdee" class="screen">
+  <div class="section-head"><h2>TDEE・目標設定</h2><span>あなたの基準値</span></div>
+
+  <div class="card">
+    <div class="notice">まず「維持に必要なカロリー」を知り、そこから無理のない減量幅を決めます。</div>
+    <label>性別</label>
+    <select id="tSex">
+      <option value="male">男性</option>
+      <option value="female">女性</option>
+    </select>
+
+    <label>年齢</label>
+    <input id="tAge" type="number" value="30">
+
+    <label>身長(cm)</label>
+    <input id="tHeight" type="number" value="170">
+
+    <label>体重(kg)</label>
+    <input id="tWeight" type="number" value="70">
+
+    <label>目標体重(kg)</label>
+    <input id="tTarget" type="number" value="60">
+
+    <label>活動量</label>
+    <select id="tActivity">
+      <option value="1.2">低い：座り仕事中心</option>
+      <option value="1.375">やや低い：軽い運動あり</option>
+      <option value="1.55" selected>普通：週3〜5回程度の運動</option>
+      <option value="1.725">高い：かなり活動的</option>
+    </select>
+
+    <button class="btn primary" style="margin-top:12px" onclick="calcDedicatedTDEE()">計算する</button>
+  </div>
+
+  <div class="card">
+    <h3>計算結果</h3>
+    <div class="grid2">
+      <div class="stat"><small>BMR</small><b id="tBmrResult">--</b></div>
+      <div class="stat"><small>TDEE</small><b id="tTdeeResult">--</b></div>
+      <div class="stat"><small>減量開始目安</small><b id="tCutResult">--</b></div>
+      <div class="stat"><small>目標まで</small><b id="tGoalResult">--</b></div>
+    </div>
+    <div class="muted" id="tdeeAdvice" style="margin-top:10px">
+      入力すると、あなたの維持カロリーと減量開始の目安を表示します。
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>このページの考え方</h3>
+    <div class="info-card"><div class="iconbox">🔥</div><div><b>BMR</b><div class="muted">何もしなくても使うエネルギーの目安。</div></div></div>
+    <div class="info-card"><div class="iconbox">⚡</div><div><b>TDEE</b><div class="muted">BMRに活動量を加味した、1日の総消費カロリーの推定値。</div></div></div>
+    <div class="info-card"><div class="iconbox">📉</div><div><b>減量開始目安</b><div class="muted">最初から大きく削らず、まずはTDEEから約10〜15%程度下げる案を表示。</div></div></div>
+  </div>
+
+  <button class="btn soft" onclick="go('home')">ホームへ戻る</button>
+</section>
+
+
+<section id="technique" class="screen">
+  <div class="section-head"><h2 id="techTitle">テクニック</h2><span>30秒で読む</span></div>
+  <div class="card">
+    <div id="techSummary" style="font-size:17px;font-weight:800;line-height:1.6"></div>
+    <div id="techBody" class="muted" style="margin-top:12px;line-height:1.8"></div>
+  </div>
+  <div class="notice" id="techCaution">テクニックは必須ではありません。自分に合うものだけ使います。</div>
+  <button class="btn soft" style="margin-top:12px" onclick="go('learn')">学ぶへ戻る</button>
+</section>
+
+<section id="learn" class="screen">
+  <div class="section-head"><h2>ダイエットのテクニック</h2><span>学ぶ</span></div>
+  <div class="card list">
+    <div class="item" onclick="openTechnique('swap')" style="cursor:pointer"><div><b>加工食品を置き換える</b><div class="muted">食欲をコントロールする方法</div></div><span>›</span></div>
+    <div class="item" onclick="openTechnique('weekly')" style="cursor:pointer"><div><b>週単位のカロリー計算</b><div class="muted">無理のない減量ペース</div></div><span>›</span></div>
+    <div class="item" onclick="openTechnique('fasting')" style="cursor:pointer"><div><b>断食中の食事設計</b><div class="muted">栄養をしっかり確保</div></div><span>›</span></div>
+    <div class="item" onclick="openTechnique('ipf')" style="cursor:pointer"><div><b>IPFの基本ルール</b><div class="muted">選択肢として学ぶ</div></div><span>›</span></div>
+    <div class="item" onclick="openTechnique('ifthen')" style="cursor:pointer"><div><b>If-Then Planning</b><div class="muted">行動を自動化</div></div><span>›</span></div>
+    <div class="item" onclick="openTechnique('recovery')" style="cursor:pointer"><div><b>休養・食事を楽しむ日</b><div class="muted">計画的に休む</div></div><span>›</span></div>
+  </div>
+<div class="card">
+    <h3>TDEE・目標</h3>
+    <div id="profileSummary" class="muted"></div>
+    <div class="row" style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn primary" onclick="openTDEE()">TDEE計算ページ</button>
+      <button class="btn soft" onclick="editSetup()">初期設定</button>
+    </div>
+    <button class="btn ghost" style="margin-top:8px" onclick="openCalBalance()">1日のカロリー収支を計算</button>
+  </div>
+
+  <div class="card">
+    <h3>データ管理</h3>
+    <div class="muted">端末内に保存している記録データをバックアップできます。</div>
+    <div class="row" style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn soft" onclick="exportLabData()">データを書き出す</button>
+      <label class="btn ghost" style="text-align:center;margin:0;cursor:pointer">
+        読み込む
+        <input id="importDataInput" type="file" accept=".json,application/json" style="display:none" onchange="importLabData(event)">
+      </label>
+    </div>
+    <button class="btn ghost" style="margin-top:8px" onclick="restoreBeforeImport()">読み込み前に戻す</button>
+    <button class="btn ghost" style="margin-top:8px;color:var(--red)" onclick="deleteAllLocalData()">端末内データをすべて削除</button>
+    <div class="muted" style="margin-top:8px;font-size:12px">この操作はこのアプリが端末内に保存した記録・バックアップだけを削除します。元に戻せません。</div>
+  </div>
+
+  <div class="card">
+    <h3>食事間隔</h3>
+    <b style="font-size:28px" id="fastingText">--</b>
+    <div class="notice" style="margin-top:10px">長いほど良いとは表示しません。体調・総摂取量・栄養を優先します。</div>
+  </div>
+</section>
+</main>
+
+<nav class="tabs" id="tabs">
+  <button class="tab active" aria-label="ホーム" onclick="go('home',this)"><b aria-hidden="true">⌂</b>ホーム</button>
+  <button class="tab" onclick="go('record',this)"><b>🍴</b>食事</button>
+  <button class="tab" onclick="go('plan',this)"><b>✓</b>習慣</button>
+  <button class="tab" aria-label="分析" onclick="go('analysis',this)"><b aria-hidden="true">▥</b>分析</button>
+  <button class="tab" aria-label="学ぶ" onclick="go('learn',this)"><b aria-hidden="true">▤</b>学ぶ</button>
+</nav>
+</div>
+
+<script>
+const KEY='dietLabRefV2';
+const CORRUPT_KEY='dietLabRefV2_corrupt_backup';
+const PRE_IMPORT_KEY='dietLabRefV2_pre_import_backup';
+const DATA_SCHEMA_VERSION=1;
+const MAX_BACKUP_MEALS=5000;
+const MAX_BACKUP_WEIGHTS=2000;
+let storageHealthy=true;
+
+function notifyStorageProblem(){
+  if(storageHealthy){
+    storageHealthy=false;
+    setTimeout(()=>alert('端末への保存に失敗しました。空き容量やブラウザ設定を確認し、必要なら設定画面からバックアップを書き出してください。'),0);
+  }
+}
+
+function storageSet(key,value){
+  try{
+    localStorage.setItem(key,value);
+    storageHealthy=true;
+    return true;
+  }catch(err){
+    notifyStorageProblem();
+    return false;
+  }
+}
+
+
+function defaultState(){
+  return {
+    schemaVersion:DATA_SCHEMA_VERSION,
+    setupDone:false,
+    profile:{},
+    mission:'夕食を写真で1枚記録する',
+    success:0,
+    level:1,
+    meals:[],
+    hunger:3,
+    satiety:3,
+    reason:'本当に空腹だった',
+    ifthen:'',
+    mode:'keep',
+    week:{月:'通常',火:'通常',水:'軽め',木:'通常',金:'休養',土:'食事を楽しむ',日:'通常'},
+    exerciseKcal:0,
+    weights:[],
+    fatigue:2,
+    recoveryType:'',
+    pendingPhoto:'',
+    onboardingDone:false
+  };
+}
+
+function normalizeState(raw){
+  const base=defaultState();
+  const src=(raw && typeof raw==='object' && !Array.isArray(raw)) ? raw : {};
+  const out={...base,...src};
+
+  out.schemaVersion=DATA_SCHEMA_VERSION;
+  out.profile=(src.profile && typeof src.profile==='object' && !Array.isArray(src.profile)) ? src.profile : {};
+  out.meals=Array.isArray(src.meals) ? src.meals.filter(x=>x && typeof x==='object').slice(-MAX_BACKUP_MEALS) : [];
+  out.weights=Array.isArray(src.weights) ? src.weights.filter(x=>x && typeof x==='object').slice(-MAX_BACKUP_WEIGHTS) : [];
+  out.week=(src.week && typeof src.week==='object' && !Array.isArray(src.week)) ? {...base.week,...src.week} : {...base.week};
+
+  out.success=Math.max(0,Number.isFinite(Number(src.success)) ? Number(src.success) : base.success);
+  out.level=Math.max(1,Number.isFinite(Number(src.level)) ? Number(src.level) : base.level);
+  out.exerciseKcal=Math.max(0,Number.isFinite(Number(src.exerciseKcal)) ? Number(src.exerciseKcal) : base.exerciseKcal);
+  out.hunger=Math.min(5,Math.max(1,Number.isFinite(Number(src.hunger)) ? Number(src.hunger) : base.hunger));
+  out.satiety=Math.min(5,Math.max(1,Number.isFinite(Number(src.satiety)) ? Number(src.satiety) : base.satiety));
+  out.fatigue=Math.min(5,Math.max(1,Number.isFinite(Number(src.fatigue)) ? Number(src.fatigue) : base.fatigue));
+
+  // v41で廃止した旧リマインダー状態は移行時に破棄する。
+  delete out.reminders;
+
+  return out;
+}
+
+function loadState(){
+  let stored=null;
+  try{
+    stored=localStorage.getItem(KEY);
+    const raw=JSON.parse(stored||'null');
+    return normalizeState(raw);
+  }catch(err){
+    if(stored){
+      try{ localStorage.setItem(CORRUPT_KEY,stored); }catch(_err){}
+    }
+    notifyStorageProblem();
+    return defaultState();
+  }
+}
+
+let state=loadState();
+function applyInputDateBounds(){
+  if(typeof recordDate!=='undefined' && recordDate){ recordDate.max=isoDate(); }
+}
+function save(){
+  state=normalizeState(state);
+  return storageSet(KEY,JSON.stringify(state));
+}
+function dateText(){
+  const d=new Date();
+  return `${d.getMonth()+1}月${d.getDate()}日`;
+}
+
+
+const TECHNIQUES = {
+  swap:{
+    title:'加工食品を置き換える',
+    summary:'「禁止する」より、「代わりに何を食べるか」を先に決める。',
+    body:'食欲が乱れやすい食品を完全禁止にせず、枝豆・卵・無糖ヨーグルト・魚・鶏肉など、自分が続けやすい候補へ置き換えます。食事記録から成功した置き換えを残し、本人の定番を作る設計です。',
+    caution:'食品を善悪だけで評価せず、総摂取量・栄養・満足感も合わせて判断します。'
+  },
+  weekly:{
+    title:'週単位のカロリー計算',
+    summary:'1日の体重ではなく、7日平均と週全体の傾向で判断する。',
+    body:'TDEEを基準に無理のない赤字を作り、日々の水分変動に振り回されないよう体重は7日平均で確認します。減りすぎ・減らなさすぎのときだけ小さく調整します。',
+    caution:'急激なカロリー制限を自動で勧めない設計にします。'
+  },
+  fasting:{
+    title:'食事間隔・断食',
+    summary:'「長く空ける」こと自体をゴールにしない。',
+    body:'食事と食事の間隔を記録し、間食・空腹感・摂取カロリー・体調との関係を本人のデータで見ます。食べる時間帯では、たんぱく質・野菜・必要な糖質と脂質を確保します。',
+    caution:'長時間断食ほど良い、という表示はしません。体調と栄養を優先します。'
+  },
+  ipf:{
+    title:'IPF',
+    summary:'毎日同じ制限が合わない人向けの「選択肢」として扱う。',
+    body:'低カロリー日と通常日を組み合わせる考え方を学習コンテンツとして用意します。アプリでは週全体の収支とたんぱく質確保を優先し、固定ルールを万人に当てはめません。',
+    caution:'具体的な頻度・割合は対象者や研究条件を確認してから本実装します。'
+  },
+  ifthen:{
+    title:'If-Then Planning',
+    summary:'「もし○○したら → △△する」で、迷う回数を減らす。',
+    body:'選択式と自由入力の両方を使えます。たとえば「夕食を置いたら写真を撮る」「仕事が終わったら5分歩く」のように、すでに起こる出来事へ行動を接続します。',
+    caution:'最初から複雑なルールを増やさず、1〜2個から始めます。'
+  },
+  recovery:{
+    title:'休養・食事を楽しむ日',
+    summary:'休むことも、楽しむことも、計画の一部。',
+    body:'通常日・軽めの日・完全休養日・食事を楽しむ日を週間計画に入れます。休養日に休めたら「達成」。楽しんだ翌日に極端な制限で帳尻合わせをしない設計です。',
+    caution:'完璧さではなく、長期的に戻ってこられることを評価します。'
+  }
+};
+
+function openTechnique(key){
+  const t=TECHNIQUES[key];
+  if(!t) return;
+  techTitle.textContent=t.title;
+  techSummary.textContent=t.summary;
+  techBody.textContent=t.body;
+  techCaution.textContent=t.caution;
+  go('technique');
+}
+
+function exportLabData(){
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='kyou-koredake-backup.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function importLabData(event){
+  const input=event.target;
+  const file=input.files && input.files[0];
+  if(!file) return;
+  if(file.size>5*1024*1024){ alert('バックアップファイルが大きすぎます。5MB以下のJSONを選んでください。'); input.value=''; return; }
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(!data || typeof data!=='object' || Array.isArray(data)){
+        alert('バックアップデータとして読み込めません。');
+        return;
+      }
+      if(Number(data.schemaVersion||0)>DATA_SCHEMA_VERSION){
+        alert('このバックアップは新しいバージョンのアプリで作成されています。アプリを更新してから読み込んでください。');
+        return;
+      }
+      if(!confirm('現在の記録をバックアップしてから、このデータで上書きしますか？')) return;
+      storageSet(PRE_IMPORT_KEY,JSON.stringify(state));
+      state=normalizeState(data);
+      if(!save()) return;
+      alert('バックアップデータを読み込みました。必要なら「読み込み前に戻す」で直前の状態へ戻せます。');
+      location.reload();
+    }catch(err){
+      alert('JSONファイルを読み込めませんでした。');
+    }finally{
+      input.value='';
+    }
+  };
+  reader.onerror=()=>{ alert('ファイルを読み込めませんでした。'); input.value=''; };
+  reader.readAsText(file);
+}
+
+function restoreBeforeImport(){
+  let stored=null;
+  try{ stored=localStorage.getItem(PRE_IMPORT_KEY); }catch(err){ notifyStorageProblem(); return; }
+  if(!stored){ alert('読み込み前のバックアップはありません。'); return; }
+  if(!confirm('現在の記録を、直前の読み込み前の状態へ戻しますか？')) return;
+  try{
+    const data=JSON.parse(stored);
+    state=normalizeState(data);
+    if(save()){
+      localStorage.removeItem(PRE_IMPORT_KEY);
+      alert('読み込み前の状態へ戻しました。');
+      location.reload();
+    }
+  }catch(err){
+    alert('読み込み前バックアップを復元できませんでした。');
+  }
+}
+
+function ownedStorageKeys(){
+  return [KEY,CORRUPT_KEY,PRE_IMPORT_KEY];
+}
+
+function deleteAllLocalData(){
+  if(!confirm('この端末に保存した「今日これだけ。」の記録データをすべて削除しますか？')) return;
+  if(!confirm('削除すると元に戻せません。バックアップが必要な場合はキャンセルして先に「データを書き出す」を実行してください。削除を続けますか？')) return;
+  try{
+    ownedStorageKeys().forEach(key=>localStorage.removeItem(key));
+  }catch(err){
+    notifyStorageProblem();
+    return;
+  }
+  state=defaultState();
+  alert('この端末に保存していたアプリデータを削除しました。');
+  location.reload();
+}
+
+// 旧コードや古いテストから呼ばれても完全削除へ統一する。
+function resetLabData(){ deleteAllLocalData(); }
+
+function goOnboardingNext(){
+  state.onboardingDone=true;
+  save();
+  showSetup();
+}
+
+function showOnboarding(){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  onboarding.classList.add('active');
+  tabs.style.display='none';
+}
+
+function continuityScoreCalc(){
+  const dates=new Set();
+  (state.meals||[]).forEach(m=>dates.add(m.date||isoDate(m.ts)));
+  (state.weights||[]).forEach(w=>dates.add(isoDate(w.ts)));
+  const activeDays=dates.size;
+  const successPoints=Math.min(40,state.success*5);
+  const recordPoints=Math.min(60,activeDays*6);
+  return Math.min(100,successPoints+recordPoints);
+}
+
+function goalForecastText(){
+  const wc=weeklyWeightChange();
+  const p=state.profile||{};
+  const avg7=sevenDayAverage() || Number(p.weight||0);
+  const target=Number(p.target||0);
+  if(!wc || wc>=0 || !avg7 || !target || avg7<=target) return '--';
+  const remain=avg7-target;
+  const weeks=remain/Math.abs(wc);
+  if(!isFinite(weeks) || weeks>104) return '--';
+  if(weeks<1) return '1週未満';
+  if(weeks<8) return `約${Math.round(weeks)}週`;
+  return `約${Math.round(weeks/4.345)}か月`;
+}
+
+
+function showSetup(){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  setup.classList.add('active');
+  tabs.style.display='none';
+}
+function finiteNumber(value){
+  const n=Number(value);
+  return Number.isFinite(n)?n:null;
+}
+function inRange(value,min,max){
+  const n=finiteNumber(value);
+  return n!==null && n>=min && n<=max;
+}
+function validRecordDate(dateStr){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(dateStr||'')) return false;
+  const d=new Date(`${dateStr}T12:00:00`);
+  if(!Number.isFinite(d.getTime())) return false;
+  return dateStr<=isoDate();
+}
+function validTimeText(timeStr){
+  return /^([01]\d|2[0-3]):[0-5]\d$/.test(timeStr||'');
+}
+function boundedNumber(value,min,max,fallback=0){
+  const n=finiteNumber(value);
+  if(n===null) return fallback;
+  return Math.min(max,Math.max(min,n));
+}
+
+function finishSetup(){
+  const sex=sSex.value, age=+sAge.value, height=+sHeight.value, weight=+sWeight.value, target=+sTarget.value, activity=+sActivity.value;
+  if(!inRange(age,18,100) || !inRange(height,120,230) || !inRange(weight,30,300) || !inRange(target,30,300) || !inRange(activity,1.1,2.5)){
+    alert('18歳以上であることと、年齢・身長・体重・目標体重の入力値を確認してください。');
+    return;
+  }
+  const bmr=10*weight+6.25*height-5*age+(sex==='male'?5:-161);
+  state.profile={sex,age,height,weight,target,activity,bmr:Math.round(bmr),tdee:Math.round(bmr*activity)};
+  state.mission=starterMission.value;
+  state.setupDone=true;
+  save();
+  tabs.style.display='grid';
+  go('start');
+}
+function editSetup(){state.setupDone=false;save();showSetup()}
+function activateScreen(id,btn){
+  const target=document.getElementById(id);
+  if(!target) return false;
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  target.classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  else{
+    const ids=['home','record','plan','analysis','learn'];
+    const i=ids.indexOf(id);
+    if(i>=0)document.querySelectorAll('.tab')[i].classList.add('active');
+  }
+  render();
+  window.scrollTo(0,0);
+  return true;
+}
+function go(id,btn,options){
+  options=options||{};
+  if(!state.setupDone && id!=='setup'){showSetup();return}
+  if(!activateScreen(id,btn)) return;
+  if(!options.fromHistory && id!=='setup' && id!=='onboarding'){
+    const url='#'+id;
+    if(options.replace || !history.state){ history.replaceState({screen:id},'',url); }
+    else if(location.hash!==url){ history.pushState({screen:id},'',url); }
+  }
+}
+window.addEventListener('popstate',event=>{
+  if(!state.setupDone){ showSetup(); return; }
+  const id=(event.state&&event.state.screen) || location.hash.replace('#','') || 'home';
+  activateScreen(document.getElementById(id)?id:'home');
+});
+function completeMission(){
+  state.success++;
+  if(state.success%3===0 && state.level<6)state.level++;
+  save();render();
+}
+function nowTime(){return new Date().toTimeString().slice(0,5)}
+function saveMeal(){
+  const date=selectedRecordDate();
+  const time=foodTime.value||nowTime();
+  const kcal=finiteNumber(foodKcal.value||0);
+  if(!validRecordDate(date)){ alert('食事の日付は今日以前の正しい日付を選んでください。'); return; }
+  if(!validTimeText(time)){ alert('食事時刻を確認してください。'); return; }
+  if(kcal===null || kcal<0 || kcal>10000){ alert('カロリーは0〜10000kcalの範囲で入力してください。'); return; }
+  state.meals.push({id:Date.now()+Math.random(),name:(foodName.value||'食事').trim().slice(0,80)||'食事',kcal,p:0,f:0,c:0,time,date,ts:timestampForDateAndTime(date,time)});
+  foodName.value=''; foodKcal.value=''; foodTime.value='';
+  save();render();
+}
+
+const FOOD_DB = [
+  {name:'鶏むね肉 100g', kcal:165, p:31, f:3.6, c:0},
+  {name:'ごはん 150g', kcal:234, p:3.8, f:0.5, c:55},
+  {name:'納豆 1パック', kcal:90, p:7.4, f:4.5, c:5.4},
+  {name:'ゆで卵 1個', kcal:75, p:6.2, f:5.2, c:0.2},
+  {name:'枝豆 100g', kcal:125, p:11.7, f:6.2, c:8.8},
+  {name:'無糖ヨーグルト 100g', kcal:62, p:3.6, f:3.0, c:4.9},
+  {name:'鮭 100g', kcal:208, p:22, f:13, c:0},
+  {name:'ブロッコリー 100g', kcal:37, p:5.4, f:0.6, c:6.6},
+  {name:'さつまいも 150g', kcal:190, p:1.8, f:0.3, c:45},
+  {name:'ポテトチップス 60g', kcal:330, p:3.3, f:21, c:32}
+];
+
+function searchFoodDB(){
+  const q=(foodSearch.value||'').trim().toLowerCase();
+  if(!q){ foodSearchResults.innerHTML=''; return; }
+  const hits=FOOD_DB.filter(x=>x.name.toLowerCase().includes(q)).slice(0,6);
+  foodSearchResults.innerHTML=hits.length
+    ?hits.map((x,i)=>`<div class="item"><div><b>${x.name}</b><div class="muted">参考値 ${x.kcal}kcal / P${x.p} F${x.f} C${x.c}</div></div><button class="btn soft" style="width:auto;padding:7px 10px" onclick="addFoodFromDB(${FOOD_DB.indexOf(x)})">追加</button></div>`).join('')
+    :'<div class="muted">候補がありません。</div>';
+}
+
+function addFoodFromDB(i){
+  const x=FOOD_DB[i];
+  const date=selectedRecordDate();
+  state.meals.push({id:Date.now()+Math.random(),name:x.name,kcal:x.kcal,p:x.p,f:x.f,c:x.c,time:nowTime(),date,ts:timestampForDateAndTime(date,nowTime())});
+  save(); render();
+}
+
+
+function isoDate(ts=Date.now()){
+  const d=new Date(ts);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function selectedRecordDate(){
+  const value=recordDate.value || isoDate();
+  return validRecordDate(value)?value:isoDate();
+}
+
+function timestampForDateAndTime(dateStr,timeStr){
+  const safeDate=validRecordDate(dateStr)?dateStr:isoDate();
+  const t=validTimeText(timeStr)?timeStr:nowTime();
+  const d=new Date(`${safeDate}T${t}:00`);
+  return Number.isFinite(d.getTime())?d.getTime():Date.now();
+}
+
+function handleMealPhoto(event){
+  const file=event.target.files && event.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      const maxSide=1280;
+      let w=img.width,h=img.height;
+      const scale=Math.min(1,maxSide/Math.max(w,h));
+      w=Math.max(1,Math.round(w*scale));
+      h=Math.max(1,Math.round(h*scale));
+      const canvas=document.createElement('canvas');
+      canvas.width=w; canvas.height=h;
+      const ctx=canvas.getContext('2d');
+      ctx.drawImage(img,0,0,w,h);
+      const compressed=canvas.toDataURL('image/jpeg',0.72);
+      state.pendingPhoto=compressed;
+      photoPreview.src=compressed;
+      photoPreviewWrap.classList.remove('hidden');
+      save();
+    };
+    img.onerror=()=>alert('画像を読み込めませんでした。');
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function registerPhotoMeal(){
+  const date=selectedRecordDate();
+  state.meals.push({
+    id:Date.now()+Math.random(),
+    name:'食事写真',
+    kcal:0,p:0,f:0,c:0,
+    time:nowTime(),
+    date,
+    ts:timestampForDateAndTime(date,nowTime()),
+    photo:state.pendingPhoto||''
+  });
+  state.pendingPhoto='';
+  photoPreviewWrap.classList.add('hidden');
+  mealPhotoInput.value='';
+  save();render();
+}
+
+function openEditMeal(id){
+  const m=state.meals.find(x=>String(x.id)===String(id));
+  if(!m) return;
+  editMealId.value=m.id;
+  editMealName.value=m.name||'';
+  editMealKcal.value=m.kcal||0;
+  editMealP.value=m.p||0;
+  editMealF.value=m.f||0;
+  editMealC.value=m.c||0;
+  editMealTime.value=m.time||'';
+  editMealBox.classList.remove('hidden');
+  editMealBox.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function saveEditedMeal(){
+  const m=state.meals.find(x=>String(x.id)===String(editMealId.value));
+  if(!m) return;
+  const kcal=finiteNumber(editMealKcal.value||0), p=finiteNumber(editMealP.value||0), f=finiteNumber(editMealF.value||0), c=finiteNumber(editMealC.value||0);
+  const time=editMealTime.value||m.time||nowTime();
+  if(kcal===null || kcal<0 || kcal>10000 || [p,f,c].some(v=>v===null || v<0 || v>1000)){ alert('カロリー・PFCの入力値を確認してください。'); return; }
+  if(!validTimeText(time)){ alert('食事時刻を確認してください。'); return; }
+  m.name=(editMealName.value||'食事').trim().slice(0,80)||'食事';
+  m.kcal=kcal; m.p=p; m.f=f; m.c=c;
+  m.time=time;
+  m.ts=timestampForDateAndTime(m.date||isoDate(m.ts),m.time);
+  save();
+  editMealBox.classList.add('hidden');
+  render();
+}
+
+function deleteMeal(id){
+  if(!confirm('この食事記録を削除しますか？')) return;
+  state.meals=state.meals.filter(x=>String(x.id)!==String(id));
+  save();render();
+}
+
+function mealsForDate(dateStr){
+  return state.meals.filter(m=>(m.date||isoDate(m.ts))===dateStr);
+}
+
+function renderWeekCalendar(){
+  const wrap=weekCalendar;
+  if(!wrap) return;
+  const today=new Date();
+  const day=today.getDay();
+  const diff=(day+6)%7;
+  const monday=new Date(today);
+  monday.setHours(0,0,0,0);
+  monday.setDate(today.getDate()-diff);
+  const labels=['月','火','水','木','金','土','日'];
+  wrap.innerHTML=labels.map((lab,i)=>{
+    const d=new Date(monday);
+    d.setDate(monday.getDate()+i);
+    const key=isoDate(d.getTime());
+    const count=mealsForDate(key).length;
+    const isToday=key===isoDate();
+    return `<button onclick="openDateFromCalendar('${key}')" style="border:0;text-align:center;padding:8px 2px;border-radius:13px;background:${isToday?'var(--green-soft)':'#f8faf9'};color:var(--text)">
+      <div class="muted">${lab}</div>
+      <b style="display:block;margin:3px 0">${d.getDate()}</b>
+      <span style="font-size:12px">${count?'●':'○'}</span>
+    </button>`;
+  }).join('');
+}
+
+function openDateFromCalendar(dateStr){
+  go('record');
+  recordDate.value=dateStr;
+  render();
+}
+
+
+function pfcTotals(){
+  return mealsForDate(selectedRecordDate()).reduce((a,m)=>{
+    a.p+=Number(m.p||0); a.f+=Number(m.f||0); a.c+=Number(m.c||0); return a;
+  },{p:0,f:0,c:0});
+}
+
+function recoveryPlanSuggestion(){
+  const wc=weeklyWeightChange();
+  const range=targetWeeklyRange();
+  const mealCount=state.meals.length;
+  const avgIntake=mealCount?currentFoodTotal()/Math.max(1,new Set(state.meals.map(m=>new Date(m.ts).toDateString())).size):0;
+
+  if(wc!=null && range && wc < range.min){
+    return {type:'休養', text:'減量ペースが速めです。今週は1日を軽めまたは休養日にする候補です。'};
+  }
+  if(state.success>=6 && mealCount>=5){
+    return {type:'食事を楽しむ', text:'継続できています。週全体の収支を崩しすぎない範囲で「食事を楽しむ日」を1回入れる候補です。'};
+  }
+  if(avgIntake>0 && state.profile.tdee && avgIntake < state.profile.tdee*0.7){
+    return {type:'軽め', text:'摂取量がかなり低めです。運動は軽めにし、食事を極端に削らない候補です。'};
+  }
+  return {type:'軽め', text:'現状は大きな調整不要です。疲労が高い日に軽めの日を入れる程度でOKです。'};
+}
+
+function applyRecoverySuggestion(){
+  const rec=recoveryPlanSuggestion();
+  state.recoveryType=rec.type;
+  // Put suggestion on Friday by default for lab prototype
+  state.week['金']=rec.type==='食事を楽しむ'?'食事を楽しむ':rec.type;
+  save(); render();
+  alert('提案を金曜日に反映しました。');
+}
+
+function saveAppetite(){
+  state.hunger=+hunger.value;state.satiety=+satiety.value;state.reason=reason.value;save();
+}
+function saveIfThen(){
+  state.ifthen=`もし「${ifPreset.value}」→「${thenPreset.value}」`;
+  save();render();
+}
+function saveFree(){
+  if(ifFree.value&&thenFree.value){
+    state.ifthen=`もし「${ifFree.value}」→「${thenFree.value}」`;
+    save();render();
+  }
+}
+function setMode(mode){
+  state.mode=mode;save();render();
+}
+function renderWeekPlan(){
+  const days=['月','火','水','木','金','土','日'];
+  weekPlan.innerHTML=days.map(d=>`<div class="dayrow"><b>${d}</b><select data-day="${d}">
+  ${['通常','軽め','休養','食事を楽しむ'].map(v=>`<option ${state.week[d]===v?'selected':''}>${v}</option>`).join('')}
+  </select></div>`).join('');
+}
+function saveWeekPlan(){
+  document.querySelectorAll('#weekPlan select').forEach(s=>state.week[s.dataset.day]=s.value);
+  save();alert('週間計画を保存しました。');
+}
+function calculateFastingText(){
+  if(!state.meals.length)return '--';
+  const h=(Date.now()-state.meals[state.meals.length-1].ts)/36e5;
+  return Math.max(0,h).toFixed(1)+'時間';
+}
+
+
+
+function saveQuickDaily(){
+  const rawWeight=quickWeight.value.trim();
+  const rawExercise=quickExercise.value.trim();
+  const w=rawWeight===''?null:finiteNumber(rawWeight);
+  const ex=rawExercise===''?0:finiteNumber(rawExercise);
+  if(w!==null && !inRange(w,30,300)){ alert('体重は30〜300kgの範囲で入力してください。'); return; }
+  if(ex===null || ex<0 || ex>5000){ alert('運動消費は0〜5000kcalの範囲で入力してください。'); return; }
+  if(w!==null){
+    state.weights.push({value:w,ts:Date.now()});
+    state.weights=state.weights.filter(x=>x && inRange(x.value,30,300) && Number.isFinite(Number(x.ts))).slice(-1000);
+    state.profile.weight=w;
+  }
+  state.exerciseKcal=ex;
+  quickWeight.value=''; quickExercise.value='';
+  save();
+  render();
+}
+
+function currentFoodTotal(){
+  return mealsForDate(isoDate()).reduce((s,m)=>s+(m.kcal||0),0);
+}
+
+function currentBurn(){
+  const bmr=(state.profile&&state.profile.bmr)?Number(state.profile.bmr):0;
+  return bmr + Number(state.exerciseKcal||0);
+}
+
+function currentBalance(){
+  return currentFoodTotal()-currentBurn();
+}
+
+function openCalBalance(){
+  const p=state.profile||{};
+  cbBmr.value=p.bmr||'';
+  cbExercise.value=state.exerciseKcal||'';
+  const total=currentFoodTotal();
+  cbFood.value=total||'';
+  go('calbalance');
+  if(cbBmr.value && cbFood.value) calcCalorieBalance(false);
+}
+
+function calcCalorieBalance(showAdvice=true){
+  const bmr=Number(cbBmr.value||0);
+  const exercise=Number(cbExercise.value||0);
+  const food=Number(cbFood.value||0);
+  if(!inRange(bmr,0,10000) || !inRange(exercise,0,5000) || !inRange(food,0,20000)){
+    cbAdvice.textContent='BMR・運動消費・摂取カロリーの入力値を確認してください。';
+    return;
+  }
+  state.exerciseKcal=exercise;
+  save();
+
+  const burn=bmr+exercise;
+  const balance=food-burn;
+
+  cbBurn.textContent=Math.round(burn)+' kcal';
+  cbIntake.textContent=Math.round(food)+' kcal';
+  cbBalance.textContent=(balance>0?'+':'')+Math.round(balance)+' kcal';
+
+  if(balance < -500){
+    cbStatus.textContent='大きめの赤字';
+    cbAdvice.textContent='赤字が大きめです。毎日この幅が続くなら、食事量や運動量を見直して無理がないか確認しましょう。';
+  }else if(balance < 0){
+    cbStatus.textContent='赤字';
+    cbAdvice.textContent='消費が摂取を上回っています。1日だけで判断せず、週単位で体重変化を確認しましょう。';
+  }else if(balance === 0){
+    cbStatus.textContent='ほぼ維持';
+    cbAdvice.textContent='摂取と消費がほぼ同じです。';
+  }else{
+    cbStatus.textContent='黒字';
+    cbAdvice.textContent='摂取が消費を上回っています。減量中なら、週全体の収支を確認して調整しましょう。';
+  }
+}
+
+function openTDEE(){
+  const p=state.profile||{};
+  if(p.sex) tSex.value=p.sex;
+  if(p.age) tAge.value=p.age;
+  if(p.height) tHeight.value=p.height;
+  if(p.weight) tWeight.value=p.weight;
+  if(p.target) tTarget.value=p.target;
+  if(p.activity) tActivity.value=p.activity;
+  go('tdee');
+  if(p.weight) calcDedicatedTDEE(false);
+}
+
+function calcDedicatedTDEE(saveProfile=true){
+  const sex=tSex.value;
+  const age=+tAge.value;
+  const height=+tHeight.value;
+  const weight=+tWeight.value;
+  const target=+tTarget.value;
+  const activity=+tActivity.value;
+
+  if(!inRange(age,18,100) || !inRange(height,120,230) || !inRange(weight,30,300) || !inRange(target,30,300) || !inRange(activity,1.1,2.5)){
+    tdeeAdvice.textContent='18歳以上であることと、身長・体重・目標体重の入力値を確認してください。';
+    return;
+  }
+
+  const bmr=10*weight+6.25*height-5*age+(sex==='male'?5:-161);
+  const tdee=Math.round(bmr*activity);
+  const cut=Math.round(tdee*0.85);
+  const goal=Math.max(0,weight-target);
+
+  tBmrResult.textContent=Math.round(bmr)+' kcal';
+  tTdeeResult.textContent=tdee+' kcal';
+  tCutResult.textContent=cut+' kcal';
+  tGoalResult.textContent=goal.toFixed(1)+' kg';
+
+  let advice='最初はTDEEから約15%下げる設定を表示しています。2〜3週間の体重7日平均を見て微調整します。';
+  if(goal<=0) advice='現在体重が目標体重以下です。減量ではなく維持設定を優先してください。';
+  tdeeAdvice.textContent=advice;
+
+  if(saveProfile){
+    state.profile={sex,age,height,weight,target,activity,bmr:Math.round(bmr),tdee};
+    save();
+    render();
+  }
+}
+
+
+function weightEntriesLastNDays(n){
+  const cutoff = Date.now() - n*24*60*60*1000;
+  return (state.weights||[]).filter(w => w.ts >= cutoff).sort((a,b)=>a.ts-b.ts);
+}
+
+function average(arr){
+  if(!arr.length) return null;
+  return arr.reduce((s,x)=>s+x,0)/arr.length;
+}
+
+function latestDailyWeights(){
+  // Keep only the latest entry for each date
+  const map = new Map();
+  (state.weights||[]).forEach(w=>{
+    const d = new Date(w.ts);
+    const key = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+    map.set(key, w);
+  });
+  return [...map.values()].sort((a,b)=>a.ts-b.ts);
+}
+
+function sevenDayAverage(){
+  const vals = weightEntriesLastNDays(7).map(w=>Number(w.value));
+  return average(vals);
+}
+
+function previousSevenDayAverage(){
+  const now = Date.now();
+  const start = now - 14*24*60*60*1000;
+  const end = now - 7*24*60*60*1000;
+  const vals = (state.weights||[]).filter(w=>w.ts>=start && w.ts<end).map(w=>Number(w.value));
+  return average(vals);
+}
+
+function weeklyWeightChange(){
+  const cur = sevenDayAverage();
+  const prev = previousSevenDayAverage();
+  if(cur==null || prev==null) return null;
+  return cur-prev;
+}
+
+function targetWeeklyRange(){
+  const current = sevenDayAverage() || (state.profile&&Number(state.profile.weight)) || null;
+  if(!current) return null;
+  return {min:-current*0.01, max:-current*0.005}; // negative kg/week
+}
+
+
+function dailyCaloriesMap(){
+  const map={};
+  (state.meals||[]).forEach(m=>{
+    const key=m.date||isoDate(m.ts);
+    map[key]=(map[key]||0)+Number(m.kcal||0);
+  });
+  return map;
+}
+
+function autoMissionDecision(){
+  const today=isoDate();
+  const todayMeals=mealsForDate(today);
+  const todayWeight=(state.weights||[]).some(w=>isoDate(w.ts)===today);
+  const rec=autoRecommendation();
+
+  if(rec.label==='EASY'){
+    return {mission:'今日は最低ラインだけでOK', reason:'減量ペースが速めなので、負荷を下げます。'};
+  }
+  if(!todayWeight){
+    return {mission:'体重計に乗るだけ', reason:'週平均を作るため、今日は体重記録を優先します。'};
+  }
+  if(todayMeals.length===0){
+    return {mission:'食事を1回だけ記録する', reason:'食事データがないので、まず1食だけ記録します。'};
+  }
+  if(state.success<3){
+    return {mission:state.mission, reason:'最初の3回は同じ簡単な行動を繰り返して成功体験を作ります。'};
+  }
+  if(rec.label==='少しUP'){
+    return {mission:'今の習慣を1段階だけ強くする', reason:'減量ペースがややゆっくりなので、無理なく1段階だけ上げます。'};
+  }
+  return {mission:state.mission, reason:'今のペースが良いので、難易度は上げず継続を優先します。'};
+}
+
+function renderCombinedChart(){
+  if(!comboWeightLine || !comboKcalLine) return;
+  const weightPts=latestDailyWeights().slice(-7);
+  if(weightPts.length<2){
+    comboWeightLine.setAttribute('points','');
+    comboKcalLine.setAttribute('points','');
+    comboChartCaption.textContent='体重記録が2件以上で比較グラフを表示します。';
+    return;
+  }
+
+  const kcalMap=dailyCaloriesMap();
+  const dates=weightPts.map(w=>isoDate(w.ts));
+  const weights=weightPts.map(w=>Number(w.value));
+  const kcals=dates.map(d=>Number(kcalMap[d]||0));
+
+  const minW=Math.min(...weights), maxW=Math.max(...weights), spanW=Math.max(.5,maxW-minW);
+  const maxK=Math.max(1,...kcals);
+  const xStep=280/(weightPts.length-1);
+
+  const wCoords=weights.map((v,i)=>{
+    const x=10+i*xStep;
+    const y=145-((v-minW)/spanW)*120;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+
+  const kCoords=kcals.map((v,i)=>{
+    const x=10+i*xStep;
+    const y=145-(v/maxK)*120;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+
+  comboWeightLine.setAttribute('points',wCoords);
+  comboKcalLine.setAttribute('points',kCoords);
+  comboChartCaption.textContent='緑＝体重、オレンジ＝その日の摂取カロリー。傾向を見るための簡易比較です。';
+}
+function renderWeightChart(){
+  const pts = latestDailyWeights().slice(-14);
+  if(pts.length < 2){
+    weightLine.setAttribute('points','');
+    trendLine.setAttribute('points','');
+    chartCaption.textContent='体重記録が2件以上でグラフを表示します。';
+    return;
+  }
+  const vals = pts.map(x=>Number(x.value));
+  const min = Math.min(...vals), max = Math.max(...vals);
+  const span = Math.max(0.5, max-min);
+  const xStep = 280/(pts.length-1);
+  const coords = pts.map((p,i)=>{
+    const x=10+i*xStep;
+    const y=145-((Number(p.value)-min)/span)*120;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  weightLine.setAttribute('points',coords);
+
+  // Linear trend
+  const n=vals.length;
+  const xs=[...Array(n)].map((_,i)=>i);
+  const sx=xs.reduce((a,b)=>a+b,0), sy=vals.reduce((a,b)=>a+b,0);
+  const sxx=xs.reduce((a,b)=>a+b*b,0), sxy=xs.reduce((a,b,i)=>a+b*vals[i],0);
+  const denom=n*sxx-sx*sx;
+  const slope=denom ? (n*sxy-sx*sy)/denom : 0;
+  const intercept=(sy-slope*sx)/n;
+  const tvals=xs.map(x=>intercept+slope*x);
+  const tcoords=tvals.map((v,i)=>{
+    const x=10+i*xStep;
+    const y=145-((v-min)/span)*120;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  trendLine.setAttribute('points',tcoords);
+  chartCaption.textContent=`直近${pts.length}日分の体重推移。点線は傾向線です。`;
+}
+
+function autoRecommendation(){
+  const wc = weeklyWeightChange();
+  const range = targetWeeklyRange();
+  if(wc==null || !range){
+    return {label:'維持', text:'まだ比較データが少ないので、今の目標をそのまま続けます。'};
+  }
+
+  // range.min is faster loss (-1%), range.max is slower loss (-0.5%)
+  if(wc < range.min){
+    return {label:'EASY', text:'減り方が速めです。食事を少し増やすか、運動負荷を少し下げる提案です。'};
+  }
+  if(wc > 0){
+    return {label:'維持', text:'体重は増加傾向です。まず記録漏れや週全体の摂取量を確認し、急な制限はしません。'};
+  }
+  if(wc > range.max){
+    return {label:'少しUP', text:'減量ペースはややゆっくりです。続けられているなら、行動を1段階だけ強くする候補です。'};
+  }
+  return {label:'維持', text:'目標レンジ内です。今のやり方を維持するのが最優先です。'};
+}
+
+function safeMissionSuggestion(){
+  const rec = autoRecommendation();
+  if(rec.label==='EASY') return '今日は最低ラインだけでOK';
+  if(rec.label==='少しUP') return '今の習慣を1段階だけ強くする';
+  return state.mission;
+}
+
+function render(){
+  applyInputDateBounds();
+  headerDate.textContent=dateText();
+  const p=state.profile||{};
+  const avg7=sevenDayAverage();
+  homeWeight.textContent=avg7!=null?avg7.toFixed(1)+'kg':(p.weight?Number(p.weight).toFixed(1)+'kg':'--');
+  homeTdee.textContent=p.tdee?p.tdee:'--';
+  const wchg=weeklyWeightChange();
+  weeklyDelta.textContent=wchg==null?'--':((wchg>0?'+':'')+wchg.toFixed(1)+'kg');
+  const autoMission=autoMissionDecision();
+  missionText.textContent=autoMission.mission;
+  autoMissionReason.textContent=autoMission.reason;
+  missionCheck.textContent=state.success>0?'✓':'○';
+  levelText.textContent='Lv.'+state.level;
+  levelBar.style.width=Math.min(100,20+state.success*12)+'%';
+  levelMessage.textContent=state.success<3?'まずは3回成功を作ります。':(state.success%3===0?'レベルアップ候補です。上げなくてもOK。':'今の難易度を継続中。');
+  continuityScore.textContent=continuityScoreCalc();
+  goalForecast.textContent=goalForecastText();
+  statusProfile.textContent=p.tdee?'✓':'--';
+  statusMeals.textContent=(state.meals||[]).length;
+  statusWeights.textContent=(state.weights||[]).length;
+
+  const total=currentFoodTotal();
+  todayKcal.textContent=total;
+  if(!recordDate.value) recordDate.value=isoDate();
+  const dayMeals=mealsForDate(selectedRecordDate()).sort((a,b)=>a.ts-b.ts);
+  mealList.innerHTML=dayMeals.length?dayMeals.map(m=>`<div class="food-row">
+    ${m.photo?`<img src="${m.photo}" style="width:70px;height:58px;object-fit:cover;border-radius:14px">`:`<div class="food-img"></div>`}
+    <div><b>${m.name}</b><div class="muted">${m.time} / P${Number(m.p||0).toFixed(0)} F${Number(m.f||0).toFixed(0)} C${Number(m.c||0).toFixed(0)}</div>
+      <div style="display:flex;gap:6px;margin-top:5px">
+        <button class="btn ghost" style="width:auto;padding:5px 8px;font-size:10px" onclick="openEditMeal('${m.id}')">編集</button>
+        <button class="btn ghost" style="width:auto;padding:5px 8px;font-size:10px;color:var(--red)" onclick="deleteMeal('${m.id}')">削除</button>
+      </div>
+    </div><b>${m.kcal}</b></div>`).join(''):'まだ記録はありません。';
+  const pfc=pfcTotals();
+  proteinTotal.textContent=pfc.p.toFixed(0)+'g';
+  fatTotal.textContent=pfc.f.toFixed(0)+'g';
+  carbTotal.textContent=pfc.c.toFixed(0)+'g';
+  hunger.value=state.hunger;satiety.value=state.satiety;reason.value=state.reason;
+  fastingTextEl=fastingText; // no-op safeguard
+  document.getElementById('fastingText').textContent=calculateFastingText();
+  ifResult.textContent=state.ifthen?'保存済み：'+state.ifthen:'';
+
+  if(state.mode==='easy'){minGoal.textContent='30秒';stdGoal.textContent='1分';plusGoal.textContent='3分';modeMsg.textContent='EASY MODE：今日は最低ラインだけでOK。';}
+  else if(state.mode==='up'){minGoal.textContent='2分';stdGoal.textContent='7分';plusGoal.textContent='12分';modeMsg.textContent='少しUP：ほんの少しだけ負荷を上げます。';}
+  else{minGoal.textContent='1分';stdGoal.textContent='5分';plusGoal.textContent='10分';modeMsg.textContent='維持：今の難易度を続けます。';}
+
+  const mealDays=[...new Set(state.meals.map(m=>m.date||isoDate(m.ts)))];
+  const totalAll=state.meals.reduce((s,m)=>s+(m.kcal||0),0);
+  const days=Math.max(1,mealDays.length);
+  const avg=state.meals.length?Math.round(totalAll/days):0;
+  avgKcal.textContent=avg;
+  tdeeDiff.textContent=p.tdee?(avg-p.tdee):'--';
+  const rec=autoRecommendation();
+  if(wchg!=null){
+    analysisResult.textContent=rec.label;
+    analysisMessage.textContent=rec.text;
+  }else if(state.success>=6){
+    analysisResult.textContent='順調';
+    analysisMessage.textContent='今のペースを維持してOKです。';
+  }else if(state.success>=3){
+    analysisResult.textContent='良い流れ';
+    analysisMessage.textContent='成功が積み上がっています。';
+  }else{
+    analysisResult.textContent='準備中';
+    analysisMessage.textContent='まずは3回の成功を作りましょう。';
+  }
+  patternText.textContent=state.meals.length>=3
+    ?`食事記録は${state.meals.length}件。空腹度${state.hunger}/5、満足度${state.satiety}/5。記録が増えるほど食事時間・空腹・摂取量の傾向を比較できます。`
+    :'まだ十分なデータがありません。3食以上記録すると簡易分析を始めます。';
+
+  quickWeight.value=p.weight||'';
+  quickExercise.value=state.exerciseKcal||'';
+
+  const burn=currentBurn();
+  const bal=currentBalance();
+  homeBurn.textContent=burn?Math.round(burn):'--';
+  homeIntake.textContent=total;
+  homeBalance.textContent=burn?((bal>0?'+':'')+Math.round(bal)):'--';
+  if(!burn) homeBalanceStatus.textContent='--';
+  else if(bal < -500) homeBalanceStatus.textContent='大きめ赤字';
+  else if(bal < 0) homeBalanceStatus.textContent='赤字';
+  else if(bal === 0) homeBalanceStatus.textContent='維持';
+  else homeBalanceStatus.textContent='黒字';
+
+  weightHistory.innerHTML=state.weights&&state.weights.length
+    ? state.weights.slice(-7).reverse().map(w=>{
+        const d=new Date(w.ts);
+        return `<div class="item"><span>${d.getMonth()+1}/${d.getDate()}</span><b>${Number(w.value).toFixed(1)}kg</b></div>`;
+      }).join('')
+    :'まだ記録はありません。';
+
+  profileSummary.innerHTML=p.tdee?`BMR 約 <b>${p.bmr} kcal</b><br>TDEE 約 <b>${p.tdee} kcal/日</b><br>${p.weight}kg → 目標 ${p.target}kg`:'プロフィール未設定';
+  const rr=recoveryPlanSuggestion();
+  recoverySuggestion.innerHTML=`<b>${rr.type}</b><br>${rr.text}`;
+  if(state.pendingPhoto){
+    photoPreview.src=state.pendingPhoto;
+    photoPreviewWrap.classList.remove('hidden');
+  }
+  renderWeekCalendar();
+  renderWeekPlan();
+}
+if(state.exerciseKcal==null) state.exerciseKcal=0;
+if(!Array.isArray(state.weights)) state.weights=[];
+if(state.fatigue==null) state.fatigue=2;
+if(state.recoveryType==null) state.recoveryType='';
+if(state.pendingPhoto==null) state.pendingPhoto='';
+if(state.onboardingDone==null) state.onboardingDone=false;
+state.meals=(state.meals||[]).map((m,i)=>{
+  if(m.id==null) m.id=(m.ts||Date.now())+i+Math.random();
+  if(!m.date) m.date=isoDate(m.ts||Date.now());
+  return m;
+});
+function updateNetworkStatus(initial=false){
+  const el=document.getElementById('networkStatus');
+  if(!el) return;
+  clearTimeout(updateNetworkStatus._timer);
+  if(!navigator.onLine){
+    el.textContent='オフラインです。記録はこの端末に保存されます。';
+    el.dataset.state='offline';
+    el.hidden=false;
+    return;
+  }
+  if(!initial && el.dataset.state==='offline'){
+    el.textContent='オンラインに戻りました。';
+    el.dataset.state='online';
+    el.hidden=false;
+    updateNetworkStatus._timer=setTimeout(()=>{ el.hidden=true; },1800);
+    return;
+  }
+  el.dataset.state='online';
+  el.hidden=true;
+}
+window.addEventListener('offline',()=>updateNetworkStatus(false));
+window.addEventListener('online',()=>updateNetworkStatus(false));
+updateNetworkStatus(true);
+
+save();
+window.addEventListener('pagehide',()=>{ save(); });
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden') save(); });
+if(!state.onboardingDone){
+  showOnboarding();
+}else if(!state.setupDone){
+  showSetup();
+}else{
+  tabs.style.display='grid';
+  setTimeout(()=>{ if(recordDate && !recordDate.value) recordDate.value=isoDate(); render(); },0);
+  go('start',null,{replace:true});
+}
+</script>
+
+<div style="max-width:430px;margin:28px auto 96px;padding:0 18px;text-align:center;font-size:11px;color:#9a9098;line-height:2">
+  <a href="privacy.html" style="color:#9a7f8b;text-decoration:none">プライバシーポリシー</a>
+  <span> ・ </span>
+  <a href="terms.html" style="color:#9a7f8b;text-decoration:none">利用規約</a>
+  <span> ・ </span>
+  <a href="support.html" style="color:#9a7f8b;text-decoration:none">サポート</a>
+</div>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js').catch(()=>{}));
+}
+</script>
+
+</body>
+</html>
