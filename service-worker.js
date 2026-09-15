@@ -1,4 +1,4 @@
-const CACHE='kyou-koredake-pages-v111';
+const CACHE='kyou-koredake-pages-v115';
 const ASSETS=['./','./index.html','./privacy.html','./terms.html','./support.html','./manifest.webmanifest','./assets/icon-192.png','./assets/icon-512.png','./assets/apple-touch-icon.png','./assets/favicon-64.png','./assets/share-preview.png'];
 self.addEventListener('install',event=>{
   self.skipWaiting();

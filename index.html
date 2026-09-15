@@ -371,6 +371,15 @@ body[data-design-freeze="approved-master-v1"] .progress-ring{
   background:conic-gradient(var(--approved-pink) 0 36%,var(--approved-green) 36% 68%,#eef3f5 68%);
 }
 
+
+/* v114 UX flow hardening */
+#toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);z-index:200;max-width:calc(100% - 32px);background:#173a2c;color:#fff;padding:11px 16px;border-radius:999px;font-size:12px;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.18);opacity:0;pointer-events:none;transition:.22s ease;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.header-row{display:grid!important;grid-template-columns:auto 1fr auto;gap:8px;align-items:center}
+.header-back{border:0;background:#f1f7f4;color:#24734d;width:38px;height:38px;border-radius:12px;font-size:19px;display:none;place-items:center;cursor:pointer}.header-back.show{display:grid}.header-back[hidden]{display:none!important}
+.empty-state{border:1px dashed var(--approved-line);background:#fbfefd;border-radius:16px;padding:16px;text-align:center;color:var(--approved-muted);line-height:1.65}
+.review-meter{height:10px;border-radius:999px;background:#eef3f1;overflow:hidden;margin-top:8px}.review-meter>span{display:block;height:100%;background:linear-gradient(90deg,var(--approved-green),#7ed2a6);border-radius:999px;transition:width .25s ease}
+.insight-callout{background:linear-gradient(135deg,#eef9f2,#fff7f9);border:1px solid var(--approved-line);border-radius:16px;padding:14px;line-height:1.7}
 </style>
 <style id="mobile-runtime-v66">
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
@@ -398,11 +407,12 @@ button,.tab{touch-action:manipulation}
 <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
 
 </head>
-<body data-design-freeze="approved-master-v1">
+<body data-design-freeze="approved-master-v1" data-app-version="v114-ux-flow-hardening">
 <div id="networkStatus" role="status" aria-live="polite" hidden></div>
+<div id="toast" role="status" aria-live="polite"></div>
 <div class="phone">
 <header>
-  <div class="header-row"><div class="brand">今日これだけ。</div><div class="date" id="headerDate"></div></div>
+  <div class="header-row"><button id="headerBack" class="header-back" aria-label="前の画面に戻る" onclick="navigateBack()">‹</button><div class="brand">今日これだけ。</div><div class="date" id="headerDate"></div></div>
 </header>
 
 <main>
@@ -423,7 +433,7 @@ button,.tab{touch-action:manipulation}
 </section>
 
 <section id="setup" class="screen">
-  <div class="section-head"><h2>最初の設定</h2><span>TDEE・目標</span></div>
+  <div class="section-head"><h2>プロフィール・初期設定</h2><span>STEP 2 / 15</span></div>
   <div class="card">
     <label>性別</label><select id="sSex"><option value="male">男性</option><option value="female">女性</option></select>
     <label>年齢</label><input id="sAge" type="number" value="30">
@@ -476,10 +486,11 @@ button,.tab{touch-action:manipulation}
   </div>
 
   <div class="card todo">
-    <h3>今日のやること</h3>
-    <div class="item"><div style="display:flex;gap:10px;align-items:center"><span class="check" id="missionCheck">○</span><span>今日これだけを達成する</span></div></div>
-    <div class="item"><div style="display:flex;gap:10px;align-items:center"><span class="check">✓</span><span>水を1.5L飲む</span></div></div>
-    <div class="item"><div style="display:flex;gap:10px;align-items:center"><span class="check">○</span><span>軽い運動をする</span></div></div>
+    <div class="section-head" style="margin:0 0 6px"><h3>今日の記録</h3><span id="todayProgressText">0/3</span></div>
+    <div class="item"><div style="display:flex;gap:10px;align-items:center"><span class="check" id="todayMealCheck">○</span><span>食事を1回記録</span></div><button class="btn ghost" style="width:auto;padding:6px 9px" onclick="go('record')">記録</button></div>
+    <div class="item"><div style="display:flex;gap:10px;align-items:center"><span class="check" id="todayWeightCheck">○</span><span>体重を記録</span></div><button class="btn ghost" style="width:auto;padding:6px 9px" onclick="document.getElementById('quickWeight').focus();document.getElementById('quickWeight').scrollIntoView({behavior:'smooth',block:'center'})">入力</button></div>
+    <div class="item"><div style="display:flex;gap:10px;align-items:center"><span class="check" id="todayAppetiteCheck">○</span><span>空腹・満足度を記録</span></div><button class="btn ghost" style="width:auto;padding:6px 9px" onclick="go('appetite')">記録</button></div>
+    <div class="muted" id="todayProgressHint" style="margin-top:8px">全部やる必要はありません。1つ記録できれば十分です。</div>
   </div>
 
 
@@ -518,13 +529,13 @@ button,.tab{touch-action:manipulation}
 
     <div class="today-focus">
       <div class="today-focus-label">ONE SIMPLE ACTION</div>
-      <div class="today-mission" id="missionText">食事を1回だけ記録する</div>
+      <div style="display:flex;align-items:center;gap:8px"><span class="check" id="missionCheck">○</span><div class="today-mission" id="missionText">食事を1回だけ記録する</div></div>
       <div class="today-sub">
         <span class="soft-chip">完璧じゃなくてOK</span>
         <span class="soft-chip">最小行動で成功体験</span>
       </div>
       <div id="autoMissionReason" class="muted" style="margin-bottom:12px">記録状況から、今日の最小行動を選びます。</div>
-      <button class="btn primary pretty-btn" onclick="completeMission()">できた！</button>
+      <button class="btn primary pretty-btn" id="missionButton" onclick="completeMission()">できた！</button>
     </div>
   </div>
 
@@ -554,56 +565,26 @@ button,.tab{touch-action:manipulation}
     <button class="btn ghost" style="margin-top:10px" onclick="openCalBalance()">詳しく見る</button>
   </div>
 
+  <div class="card"><h3>メニュー</h3><div class="grid2"><button class="btn primary" onclick="go('record')">🍴 食事記録</button><button class="btn soft" onclick="go('weeklyreview')">📊 週間レビュー</button><button class="btn ghost" onclick="go('patterns')">✨ 成功パターン</button><button class="btn ghost" onclick="go('mypage')">⚙ 設定</button></div></div>
   <button class="btn primary" onclick="go('record')">＋ 食事を記録</button>
 </section>
 
 <section id="record" class="screen">
-  <div class="section-head"><h2>食事記録</h2><span>記録 / アドバイス</span></div>
-  <div class="row" style="display:flex;gap:10px;margin-bottom:12px">
-    <label class="btn primary" style="text-align:center;cursor:pointer;margin:0">
-      📷 写真を選ぶ
-      <input id="mealPhotoInput" type="file" accept="image/*" capture="environment" style="display:none" onchange="handleMealPhoto(event)">
-    </label>
-    <button class="btn soft" onclick="document.getElementById('manualBox').classList.toggle('hidden')">✏️ 手入力</button>
-  </div>
-
+  <div class="section-head"><h2>食事記録</h2><span>STEP 5 / 15</span></div>
   <div class="card">
-    <label>記録する日</label>
-    <input id="recordDate" type="date" onchange="render()">
-    <div id="photoPreviewWrap" class="hidden" style="margin-top:10px">
-      <img id="photoPreview" alt="食事写真" style="width:100%;height:210px;object-fit:cover;border-radius:18px">
-      <div class="muted" style="margin-top:8px">写真は記録用です。カロリーや栄養素の自動判定は行いません。</div><button class="btn primary" style="margin-top:10px" onclick="registerPhotoMeal()">この写真を記録</button>
+    <h3>記録方法を選ぶ</h3>
+    <div class="grid2">
+      <button class="btn primary" onclick="go('photoMeal')">📷 写真で記録</button>
+      <button class="btn soft" onclick="go('manualMeal')">✏️ 手入力</button>
+      <button class="btn ghost" onclick="go('appetite')">🍽️ 空腹・満足度</button>
+      <button class="btn ghost" onclick="go('fasting')">⏱ 食事間隔</button>
     </div>
+    <button class="btn ghost" style="margin-top:8px" onclick="go('swap')">🥗 食品の置き換え提案</button>
   </div>
-  <div id="manualBox" class="card hidden">
-    <label>食品名</label><input id="foodName" placeholder="例：焼き魚定食">
-    <label>カロリー</label><input id="foodKcal" type="number" min="0" max="10000" step="1" inputmode="numeric" placeholder="例：620">
-    <label>食事時刻</label><input id="foodTime" type="time">
-    <button class="btn primary" style="margin-top:10px" onclick="saveMeal()">保存</button>
-  </div>
-<div class="card">
-    <h3>食品検索 <span class="muted">（参考値）</span></h3>
-    <input id="foodSearch" placeholder="例：鶏むね肉、納豆、ごはん" oninput="searchFoodDB()">
-    <div id="foodSearchResults" style="margin-top:8px"></div>
-  </div>
-
   <div class="card">
-    <div class="section-head" style="margin:0 0 8px"><h3>この日の食事</h3><span>編集・削除できます</span></div>
+    <label>表示する日</label><input id="recordDate" type="date" onchange="render()">
+    <div class="section-head" style="margin:10px 0 8px"><h3>この日の食事</h3><span>編集・削除できます</span></div>
     <div id="mealList" class="muted">まだ記録はありません。</div>
-  </div>
-
-  <div class="card">
-    <h3>空腹・満足度</h3>
-    <label>食前の空腹度</label><input id="hunger" type="range" min="1" max="5" value="3" oninput="saveAppetite()">
-    <label>食後の満足度</label><input id="satiety" type="range" min="1" max="5" value="3" oninput="saveAppetite()">
-    <label>食べた理由</label>
-    <select id="reason" onchange="saveAppetite()">
-      <option>本当に空腹だった</option>
-      <option>時間だから</option>
-      <option>ストレス</option>
-      <option>暇だった</option>
-      <option>付き合い・外食</option>
-    </select>
   </div>
   <div class="card">
     <h3>今日のPFC <span class="muted">（参考値を含む）</span></h3>
@@ -614,21 +595,58 @@ button,.tab{touch-action:manipulation}
     </div>
   </div>
   <div id="editMealBox" class="card hidden">
-    <h3>食事を編集</h3>
-    <input id="editMealId" type="hidden">
+    <h3>食事を編集</h3><input id="editMealId" type="hidden">
     <label>食品名</label><input id="editMealName">
+    <label>時刻</label><input id="editMealTime" type="time">
     <label>カロリー</label><input id="editMealKcal" type="number" min="0" max="10000" step="1" inputmode="numeric">
     <label>たんぱく質(g)</label><input id="editMealP" type="number" min="0" max="1000" step="0.1" inputmode="decimal">
     <label>脂質(g)</label><input id="editMealF" type="number" min="0" max="1000" step="0.1" inputmode="decimal">
-    <label>炭水化物(g)</label><input id="editMealC" type="number" min="0" max="1000" step="0.1" inputmode="decimal">
-    <label>時刻</label><input id="editMealTime" type="time">
-    <div class="row" style="display:flex;gap:8px;margin-top:10px">
-      <button class="btn primary" onclick="saveEditedMeal()">更新</button>
-      <button class="btn ghost" onclick="editMealBox.classList.add('hidden')">キャンセル</button>
-    </div>
+    <label>炭水化物(g)</label><input id="editMealC" type="number" min="0" max="2000" step="0.1" inputmode="decimal">
+    <div class="row" style="display:flex;gap:8px;margin-top:10px"><button class="btn primary" onclick="saveEditedMeal()">更新</button><button class="btn ghost" onclick="closeEditMeal()">キャンセル</button></div>
   </div>
+</section>
 
-  <button class="btn soft" onclick="go('swap')">置き換え提案を見る</button>
+<section id="photoMeal" class="screen">
+  <div class="section-head"><h2>写真で食事記録</h2><span>STEP 6 / 15</span></div>
+  <div class="card">
+    <label class="btn primary" style="text-align:center;cursor:pointer;margin:0">📷 写真を撮る / 選ぶ<input id="mealPhotoInput" type="file" accept="image/*" capture="environment" style="display:none" onchange="handleMealPhoto(event)"></label>
+    <div id="photoPreviewWrap" class="hidden" style="margin-top:10px"><img id="photoPreview" alt="食事写真" style="width:100%;height:240px;object-fit:cover;border-radius:18px"><div class="muted" style="margin-top:8px">写真は記録用です。カロリーや栄養素を自動判定しません。</div><button class="btn primary" style="margin-top:10px" onclick="registerPhotoMeal()">この写真を記録</button></div>
+  </div>
+  <button class="btn soft" onclick="go('record')">食事記録へ戻る</button>
+</section>
+
+<section id="manualMeal" class="screen">
+  <div class="section-head"><h2>食事を手入力</h2><span>STEP 7 / 15</span></div>
+  <div class="card">
+    <label>食品名</label><input id="foodName" placeholder="例：焼き魚定食">
+    <label>カロリー</label><input id="foodKcal" type="number" min="0" max="10000" step="1" inputmode="numeric" placeholder="例：620">
+    <label>食事時刻</label><input id="foodTime" type="time">
+    <button class="btn primary" style="margin-top:10px" onclick="if(saveMeal()) go('record')">保存して戻る</button>
+  </div>
+  <div class="card"><h3>食品検索 <span class="muted">（参考値）</span></h3><input id="foodSearch" placeholder="例：鶏むね肉、納豆、ごはん" oninput="searchFoodDB()"><div id="foodSearchResults" style="margin-top:8px"></div></div>
+</section>
+
+<section id="appetite" class="screen">
+  <div class="section-head"><h2>空腹・満足度</h2><span>STEP 9 / 15</span></div>
+  <div class="card">
+    <label>食前の空腹度 <b id="hungerValue">3</b>/5</label><input id="hunger" type="range" min="1" max="5" value="3" oninput="hungerValue.textContent=this.value">
+    <label>食後の満足度 <b id="satietyValue">3</b>/5</label><input id="satiety" type="range" min="1" max="5" value="3" oninput="satietyValue.textContent=this.value">
+    <label>食べた理由</label><select id="reason"><option>本当に空腹だった</option><option>時間だから</option><option>ストレス</option><option>暇だった</option><option>付き合い・外食</option></select>
+    <button class="btn primary" style="margin-top:10px" onclick="saveAppetite()">この状態を記録</button>
+    <div id="appetiteSaved" class="muted" style="margin-top:8px"></div>
+    <div class="notice" style="margin-top:10px">数値は「良い・悪い」の判定ではなく、自分の食欲パターンを知るために使います。</div>
+    <div class="section-head" style="margin:14px 0 6px"><h3>最近の記録</h3><span>最新5件</span></div>
+    <div id="appetiteHistory" class="muted">まだ記録はありません。</div>
+  </div>
+  <button class="btn soft" onclick="go('record')">食事記録へ戻る</button>
+</section>
+
+<section id="fasting" class="screen">
+  <div class="section-head"><h2>食事間隔・断食時間</h2><span>STEP 10 / 15</span></div>
+  <div class="card"><h3>現在の食事間隔</h3><b style="font-size:34px" id="fastingText">--</b><div class="notice" style="margin-top:10px">長いほど良いとは表示しません。体調・総摂取量・栄養を優先します。</div></div>
+  <div class="card"><div class="section-head" style="margin:0 0 8px"><h3>最近の食事間隔</h3><span>食事時刻から自動計算</span></div><div id="fastingHistory" class="muted">食事が2回以上あると表示します。</div></div>
+  <div class="card"><h3>使い方</h3><div class="muted">食事記録の時刻から自動計算します。間食が増えた日や空腹感との関係を、週間レビューで確認します。</div></div>
+  <button class="btn soft" onclick="go('record')">食事記録へ戻る</button>
 </section>
 
 <section id="swap" class="screen">
@@ -642,8 +660,8 @@ button,.tab{touch-action:manipulation}
   </div>
 </section>
 
-<section id="analysis" class="screen">
-  <div class="section-head"><h2>週単位の管理</h2><span>体重 / カロリー</span></div>
+<section id="weeklyreview" class="screen">
+  <div class="section-head"><h2>週間レビュー</h2><span>STEP 12 / 15</span></div>
   <div class="card">
     <div class="chart" id="weightChart">
       <svg viewBox="0 0 300 160" preserveAspectRatio="none">
@@ -657,7 +675,14 @@ button,.tab{touch-action:manipulation}
   <div class="grid2">
     <div class="stat"><small>平均摂取</small><b id="avgKcal">0</b></div>
     <div class="stat"><small>TDEE差</small><b id="tdeeDiff">--</b></div>
+    <div class="stat"><small>食事記録日</small><b id="weeklyMealDays">0/7</b></div>
+    <div class="stat"><small>食欲記録</small><b id="weeklyAppetiteCount">0件</b></div>
+    <div class="stat"><small>平均空腹</small><b id="weeklyHungerAvg">--</b></div>
+    <div class="stat"><small>平均食事間隔</small><b id="weeklyFastingAvg">--</b></div>
   </div>
+  <div class="card" style="margin-top:12px"><h3>レビューの材料</h3><div class="muted"><span id="weeklyCompletenessText">0%</span> — 食事・食欲・体重の記録量から算出</div><div class="review-meter"><span id="weeklyCompletenessBar" style="width:0%"></span></div></div>
+  <div class="card"><h3>今週の気づき</h3><div id="weeklyInsight" class="muted">記録が増えると自動で表示します。</div></div>
+  <div class="card"><h3>次の一歩</h3><div id="weeklyNextAction" class="insight-callout">まず1回記録すると提案を始めます。</div></div>
 
   <div class="card">
     <h3>体重 × 食事カロリー</h3>
@@ -671,11 +696,6 @@ button,.tab{touch-action:manipulation}
   </div>
 
   <div class="card">
-    <h3>あなたの勝ちパターン</h3>
-    <div id="patternText" class="muted">まだ十分なデータがありません。</div>
-  </div>
-
-  <div class="card">
     <h3>体重履歴</h3>
     <div id="weightHistory" class="muted">まだ記録はありません。</div>
   </div>
@@ -684,10 +704,19 @@ button,.tab{touch-action:manipulation}
     <h3>次の1週間</h3>
     <div id="autoPlan" class="notice">記録が増えると、自動で「維持 / 少しUP / EASY」を提案します。</div>
   </div>
+  <button class="btn primary" onclick="go('patterns')">成功パターンを見る</button>
+</section>
+
+<section id="patterns" class="screen">
+  <div class="section-head"><h2>成功パターン・傾向</h2><span>STEP 13 / 15</span></div>
+  <div class="card"><h3>あなたの勝ちパターン</h3><div id="patternText" class="muted">まだ十分なデータがありません。</div><div class="muted" style="margin-top:10px">分析の材料：<b id="patternConfidence">少ない</b></div></div>
+  <div class="card"><h3>データから見える傾向</h3><div id="patternDetails" class="muted">記録が増えると、時間帯・食欲・満足度・食事間隔を比較します。</div></div>
+  <div class="card"><h3>見るポイント</h3><div class="info-card"><div class="iconbox">🍽️</div><div><b>空腹と満足</b><div class="muted">食べた理由と満足度の組み合わせを見る。</div></div></div><div class="info-card"><div class="iconbox">⏰</div><div><b>食事時間</b><div class="muted">自分が安定しやすい時間帯を探す。</div></div></div><div class="info-card"><div class="iconbox">📉</div><div><b>週平均</b><div class="muted">1日ではなく7日単位で体重と摂取量を見る。</div></div></div></div>
+  <button class="btn soft" onclick="go('weeklyreview')">週間レビューへ戻る</button>
 </section>
 
 <section id="plan" class="screen">
-  <div class="section-head"><h2>習慣化</h2><span>If-Then</span></div>
+  <div class="section-head"><h2>If-Thenプラン</h2><span>STEP 11 / 15</span></div>
   <div class="card">
     <h3>今日のスモールゴール</h3>
     <div class="levels">
@@ -713,6 +742,8 @@ button,.tab{touch-action:manipulation}
     <input id="thenFree" placeholder="〜する" style="margin-top:8px">
     <button class="btn ghost" style="margin-top:10px" onclick="saveFree()">保存</button>
     <div id="ifResult" class="muted" style="margin-top:10px"></div>
+    <div class="section-head" style="margin:14px 0 6px"><h3>保存したプラン</h3><span>最大10件</span></div>
+    <div id="ifThenHistory" class="muted">まだありません。</div>
   </div>
 
   <div class="card">
@@ -841,7 +872,7 @@ button,.tab{touch-action:manipulation}
 </section>
 
 <section id="learn" class="screen">
-  <div class="section-head"><h2>ダイエットのテクニック</h2><span>学ぶ</span></div>
+  <div class="section-head"><h2>ダイエットのテクニック</h2><span>STEP 14 / 15</span></div>
   <div class="card list">
     <div class="item" onclick="openTechnique('swap')" style="cursor:pointer"><div><b>加工食品を置き換える</b><div class="muted">食欲をコントロールする方法</div></div><span>›</span></div>
     <div class="item" onclick="openTechnique('weekly')" style="cursor:pointer"><div><b>週単位のカロリー計算</b><div class="muted">無理のない減量ペース</div></div><span>›</span></div>
@@ -850,36 +881,16 @@ button,.tab{touch-action:manipulation}
     <div class="item" onclick="openTechnique('ifthen')" style="cursor:pointer"><div><b>If-Then Planning</b><div class="muted">行動を自動化</div></div><span>›</span></div>
     <div class="item" onclick="openTechnique('recovery')" style="cursor:pointer"><div><b>休養・食事を楽しむ日</b><div class="muted">計画的に休む</div></div><span>›</span></div>
   </div>
-<div class="card">
-    <h3>TDEE・目標</h3>
-    <div id="profileSummary" class="muted"></div>
-    <div class="row" style="display:flex;gap:8px;margin-top:10px">
-      <button class="btn primary" onclick="openTDEE()">TDEE計算ページ</button>
-      <button class="btn soft" onclick="editSetup()">初期設定</button>
-    </div>
-    <button class="btn ghost" style="margin-top:8px" onclick="openCalBalance()">1日のカロリー収支を計算</button>
-  </div>
+<div class="card"><h3>次に見る</h3><div class="grid2"><button class="btn soft" onclick="go('tdee')">TDEE・目標</button><button class="btn ghost" onclick="go('mypage')">マイページ</button></div></div>
+</section>
 
-  <div class="card">
-    <h3>データ管理</h3>
-    <div class="muted">端末内に保存している記録データをバックアップできます。</div>
-    <div class="row" style="display:flex;gap:8px;margin-top:10px">
-      <button class="btn soft" onclick="exportLabData()">データを書き出す</button>
-      <label class="btn ghost" style="text-align:center;margin:0;cursor:pointer">
-        読み込む
-        <input id="importDataInput" type="file" accept=".json,application/json" style="display:none" onchange="importLabData(event)">
-      </label>
-    </div>
-    <button class="btn ghost" style="margin-top:8px" onclick="restoreBeforeImport()">読み込み前に戻す</button>
-    <button class="btn ghost" style="margin-top:8px;color:var(--red)" onclick="deleteAllLocalData()">端末内データをすべて削除</button>
-    <div class="muted" style="margin-top:8px;font-size:12px">この操作はこのアプリが端末内に保存した記録・バックアップだけを削除します。元に戻せません。</div>
-  </div>
-
-  <div class="card">
-    <h3>食事間隔</h3>
-    <b style="font-size:28px" id="fastingText">--</b>
-    <div class="notice" style="margin-top:10px">長いほど良いとは表示しません。体調・総摂取量・栄養を優先します。</div>
-  </div>
+<section id="mypage" class="screen">
+  <div class="section-head"><h2>マイページ・設定</h2><span>STEP 15 / 15</span></div>
+  <div class="card"><h3>プロフィール・目標</h3><div id="profileSummary" class="muted"></div><div class="grid2" style="margin-top:10px"><button class="btn primary" onclick="openTDEE()">TDEE計算</button><button class="btn soft" onclick="editSetup()">プロフィール編集</button></div></div>
+  <div class="card"><h3>学ぶ</h3><button class="btn soft" onclick="go('learn')">ダイエットテクニックを開く</button><button class="btn ghost" style="margin-top:8px" onclick="openCalBalance()">1日のカロリー収支</button></div>
+  <div class="card"><h3>記録データ</h3><div class="grid2"><div class="stat"><small>食事</small><b id="myMealCount">0</b></div><div class="stat"><small>体重</small><b id="myWeightCount">0</b></div><div class="stat"><small>食欲</small><b id="myAppetiteCount">0</b></div><div class="stat"><small>If-Then</small><b id="myIfThenCount">0</b></div></div></div>
+  <div class="card"><h3>データ管理</h3><div class="muted">記録はこの端末のブラウザ内に保存されます。</div><div class="row" style="display:flex;gap:8px;margin-top:10px"><button class="btn soft" onclick="exportLabData()">バックアップ</button><label class="btn ghost" style="text-align:center;margin:0;cursor:pointer">読み込む<input id="importDataInput" type="file" accept=".json,application/json" style="display:none" onchange="importLabData(event)"></label></div><button class="btn ghost" style="margin-top:8px" onclick="restoreBeforeImport()">読み込み前に戻す</button><button class="btn ghost" style="margin-top:8px;color:var(--red)" onclick="deleteAllLocalData()">端末内データをすべて削除</button></div>
+  <div class="card"><h3>15画面MVP</h3><div class="muted">オンボーディング → プロフィール → TDEE → ホーム → 食事記録 → 写真 → 手入力 → 置き換え → 空腹・満足度 → 食事間隔 → If-Then → 週間レビュー → 成功パターン → 学ぶ → マイページ</div></div>
 </section>
 </main>
 
@@ -887,8 +898,8 @@ button,.tab{touch-action:manipulation}
   <button class="tab active" aria-label="ホーム" onclick="go('home',this)"><b aria-hidden="true">⌂</b>ホーム</button>
   <button class="tab" onclick="go('record',this)"><b>🍴</b>食事</button>
   <button class="tab" onclick="go('plan',this)"><b>✓</b>習慣</button>
-  <button class="tab" aria-label="分析" onclick="go('analysis',this)"><b aria-hidden="true">▥</b>分析</button>
-  <button class="tab" aria-label="学ぶ" onclick="go('learn',this)"><b aria-hidden="true">▤</b>学ぶ</button>
+  <button class="tab" aria-label="週間レビュー" onclick="go('weeklyreview',this)"><b aria-hidden="true">▥</b>週レビュー</button>
+  <button class="tab" aria-label="設定" onclick="go('mypage',this)"><b aria-hidden="true">⚙</b>設定</button>
 </nav>
 </div>
 
@@ -896,7 +907,7 @@ button,.tab{touch-action:manipulation}
 const KEY='dietLabRefV2';
 const CORRUPT_KEY='dietLabRefV2_corrupt_backup';
 const PRE_IMPORT_KEY='dietLabRefV2_pre_import_backup';
-const DATA_SCHEMA_VERSION=1;
+const DATA_SCHEMA_VERSION=3;
 const MAX_BACKUP_MEALS=5000;
 const MAX_BACKUP_WEIGHTS=2000;
 let storageHealthy=true;
@@ -928,7 +939,11 @@ function defaultState(){
     mission:'夕食を写真で1枚記録する',
     success:0,
     level:1,
+    missionCompletions:[],
     meals:[],
+    appetiteLogs:[],
+    ifThenPlans:[],
+    dailyMetrics:{},
     hunger:3,
     satiety:3,
     reason:'本当に空腹だった',
@@ -953,6 +968,10 @@ function normalizeState(raw){
   out.profile=(src.profile && typeof src.profile==='object' && !Array.isArray(src.profile)) ? src.profile : {};
   out.meals=Array.isArray(src.meals) ? src.meals.filter(x=>x && typeof x==='object').slice(-MAX_BACKUP_MEALS) : [];
   out.weights=Array.isArray(src.weights) ? src.weights.filter(x=>x && typeof x==='object').slice(-MAX_BACKUP_WEIGHTS) : [];
+  out.appetiteLogs=Array.isArray(src.appetiteLogs) ? src.appetiteLogs.filter(x=>x && typeof x==='object').slice(-1000) : [];
+  out.ifThenPlans=Array.isArray(src.ifThenPlans) ? src.ifThenPlans.filter(x=>x && typeof x==='object').slice(-100) : [];
+  out.missionCompletions=Array.isArray(src.missionCompletions) ? src.missionCompletions.filter(x=>typeof x==='string' && /^\d{4}-\d{2}-\d{2}$/.test(x)).slice(-400) : [];
+  out.dailyMetrics=(src.dailyMetrics && typeof src.dailyMetrics==='object' && !Array.isArray(src.dailyMetrics)) ? src.dailyMetrics : {};
   out.week=(src.week && typeof src.week==='object' && !Array.isArray(src.week)) ? {...base.week,...src.week} : {...base.week};
 
   out.success=Math.max(0,Number.isFinite(Number(src.success)) ? Number(src.success) : base.success);
@@ -1195,6 +1214,29 @@ function boundedNumber(value,min,max,fallback=0){
   return Math.min(max,Math.max(min,n));
 }
 
+function showToast(message){
+  const el=document.getElementById('toast');
+  if(!el) return;
+  clearTimeout(showToast._timer);
+  el.textContent=String(message||'保存しました');
+  el.classList.add('show');
+  showToast._timer=setTimeout(()=>el.classList.remove('show'),1800);
+}
+const BACK_DESTINATIONS={photoMeal:'record',manualMeal:'record',appetite:'record',fasting:'record',swap:'record',patterns:'weeklyreview',calbalance:'home',tdee:'home',technique:'learn',learn:'mypage'};
+function currentScreenId(){ const el=document.querySelector('.screen.active'); return el?el.id:'home'; }
+function updateHeaderBack(id){
+  const btn=document.getElementById('headerBack');
+  if(!btn) return;
+  const show=!!BACK_DESTINATIONS[id];
+  btn.classList.toggle('show',show);
+  btn.hidden=!show;
+}
+function navigateBack(){
+  const id=currentScreenId();
+  const fallback=BACK_DESTINATIONS[id]||'home';
+  if(history.length>1 && location.hash){ history.back(); } else { go(fallback,null,{replace:true}); }
+}
+
 function finishSetup(){
   const sex=sSex.value, age=+sAge.value, height=+sHeight.value, weight=+sWeight.value, target=+sTarget.value, activity=+sActivity.value;
   if(!inRange(age,18,100) || !inRange(height,120,230) || !inRange(weight,30,300) || !inRange(target,30,300) || !inRange(activity,1.1,2.5)){
@@ -1218,11 +1260,12 @@ function activateScreen(id,btn){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   if(btn)btn.classList.add('active');
   else{
-    const ids=['home','record','plan','analysis','learn'];
+    const ids=['home','record','plan','weeklyreview','mypage'];
     const i=ids.indexOf(id);
     if(i>=0)document.querySelectorAll('.tab')[i].classList.add('active');
   }
   render();
+  updateHeaderBack(id);
   window.scrollTo(0,0);
   return true;
 }
@@ -1241,22 +1284,36 @@ window.addEventListener('popstate',event=>{
   const id=(event.state&&event.state.screen) || location.hash.replace('#','') || 'home';
   activateScreen(document.getElementById(id)?id:'home');
 });
+function missionDoneToday(){
+  return (state.missionCompletions||[]).includes(isoDate());
+}
 function completeMission(){
+  const today=isoDate();
+  if((state.missionCompletions||[]).includes(today)){
+    showToast('今日の一歩は達成済みです');
+    return;
+  }
+  state.missionCompletions.push(today);
+  state.missionCompletions=state.missionCompletions.slice(-400);
   state.success++;
   if(state.success%3===0 && state.level<6)state.level++;
   save();render();
+  showToast('今日の一歩を達成しました');
 }
 function nowTime(){return new Date().toTimeString().slice(0,5)}
 function saveMeal(){
   const date=selectedRecordDate();
   const time=foodTime.value||nowTime();
   const kcal=finiteNumber(foodKcal.value||0);
-  if(!validRecordDate(date)){ alert('食事の日付は今日以前の正しい日付を選んでください。'); return; }
-  if(!validTimeText(time)){ alert('食事時刻を確認してください。'); return; }
-  if(kcal===null || kcal<0 || kcal>10000){ alert('カロリーは0〜10000kcalの範囲で入力してください。'); return; }
+  if(!validRecordDate(date)){ alert('食事の日付は今日以前の正しい日付を選んでください。'); return false; }
+  if(!validTimeText(time)){ alert('食事時刻を確認してください。'); return false; }
+  if(kcal===null || kcal<0 || kcal>10000){ alert('カロリーは0〜10000kcalの範囲で入力してください。'); return false; }
   state.meals.push({id:Date.now()+Math.random(),name:(foodName.value||'食事').trim().slice(0,80)||'食事',kcal,p:0,f:0,c:0,time,date,ts:timestampForDateAndTime(date,time)});
   foodName.value=''; foodKcal.value=''; foodTime.value='';
-  save();render();
+  if(!save()) return false;
+  render();
+  showToast('食事を保存しました');
+  return true;
 }
 
 const FOOD_DB = [
@@ -1348,7 +1405,7 @@ function registerPhotoMeal(){
   state.pendingPhoto='';
   photoPreviewWrap.classList.add('hidden');
   mealPhotoInput.value='';
-  save();render();
+  if(save()){ render(); showToast('写真の食事記録を保存しました'); go('record'); }
 }
 
 function openEditMeal(id){
@@ -1365,6 +1422,12 @@ function openEditMeal(id){
   editMealBox.scrollIntoView({behavior:'smooth',block:'center'});
 }
 
+function closeEditMeal(){
+  const box=document.getElementById('editMealBox');
+  if(box) box.classList.add('hidden');
+  if(typeof editMealId!=='undefined') editMealId.value='';
+}
+
 function saveEditedMeal(){
   const m=state.meals.find(x=>String(x.id)===String(editMealId.value));
   if(!m) return;
@@ -1379,6 +1442,7 @@ function saveEditedMeal(){
   save();
   editMealBox.classList.add('hidden');
   render();
+  showToast('食事記録を更新しました');
 }
 
 function deleteMeal(id){
@@ -1452,21 +1516,42 @@ function applyRecoverySuggestion(){
   // Put suggestion on Friday by default for lab prototype
   state.week['金']=rec.type==='食事を楽しむ'?'食事を楽しむ':rec.type;
   save(); render();
-  alert('提案を金曜日に反映しました。');
+  showToast('提案を金曜日に反映しました');
 }
 
 function saveAppetite(){
-  state.hunger=+hunger.value;state.satiety=+satiety.value;state.reason=reason.value;save();
+  state.hunger=+hunger.value;
+  state.satiety=+satiety.value;
+  state.reason=reason.value;
+  const log={id:Date.now()+Math.random(),date:isoDate(),ts:Date.now(),hunger:state.hunger,satiety:state.satiety,reason:state.reason};
+  state.appetiteLogs.push(log);
+  state.appetiteLogs=state.appetiteLogs.slice(-1000);
+  save();render();
+  appetiteSaved.textContent='記録しました：空腹 '+state.hunger+'/5・満足 '+state.satiety+'/5';
+  showToast('空腹・満足度を保存しました');
+}
+function addIfThenPlan(text,source){
+  const clean=String(text||'').trim();
+  if(!clean) return;
+  state.ifthen=clean;
+  state.ifThenPlans.push({id:Date.now()+Math.random(),text:clean,source:source||'preset',createdAt:Date.now(),active:true});
+  state.ifThenPlans=state.ifThenPlans.slice(-10);
+  save();render();
+  showToast('If-Thenプランを保存しました');
 }
 function saveIfThen(){
-  state.ifthen=`もし「${ifPreset.value}」→「${thenPreset.value}」`;
-  save();render();
+  addIfThenPlan(`もし「${ifPreset.value}」→「${thenPreset.value}」`,'preset');
 }
 function saveFree(){
-  if(ifFree.value&&thenFree.value){
-    state.ifthen=`もし「${ifFree.value}」→「${thenFree.value}」`;
-    save();render();
+  if(ifFree.value.trim()&&thenFree.value.trim()){
+    addIfThenPlan(`もし「${ifFree.value.trim()}」→「${thenFree.value.trim()}」`,'free');
+    ifFree.value=''; thenFree.value='';
   }
+}
+function deleteIfThenPlan(id){
+  state.ifThenPlans=state.ifThenPlans.filter(x=>String(x.id)!==String(id));
+  state.ifthen=state.ifThenPlans.length?state.ifThenPlans[state.ifThenPlans.length-1].text:'';
+  save();render();
 }
 function setMode(mode){
   state.mode=mode;save();render();
@@ -1479,12 +1564,48 @@ function renderWeekPlan(){
 }
 function saveWeekPlan(){
   document.querySelectorAll('#weekPlan select').forEach(s=>state.week[s.dataset.day]=s.value);
-  save();alert('週間計画を保存しました。');
+  save();render();showToast('週間計画を保存しました');
+}
+function sortedMeals(){
+  return (state.meals||[]).filter(m=>Number.isFinite(Number(m.ts))).slice().sort((a,b)=>Number(a.ts)-Number(b.ts));
+}
+function fastingIntervals(limit=20){
+  const meals=sortedMeals();
+  const out=[];
+  for(let i=1;i<meals.length;i++){
+    const hours=(Number(meals[i].ts)-Number(meals[i-1].ts))/36e5;
+    if(hours>=0.25 && hours<=72){ out.push({hours,from:meals[i-1],to:meals[i]}); }
+  }
+  return out.slice(-limit);
 }
 function calculateFastingText(){
-  if(!state.meals.length)return '--';
-  const h=(Date.now()-state.meals[state.meals.length-1].ts)/36e5;
+  const meals=sortedMeals();
+  if(!meals.length)return '--';
+  const h=(Date.now()-Number(meals[meals.length-1].ts))/36e5;
   return Math.max(0,h).toFixed(1)+'時間';
+}
+function lastNDaysStart(n=7){
+  const d=new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate()-(n-1)); return d.getTime();
+}
+function weeklySummary(){
+  const start=lastNDaysStart(7), now=Date.now();
+  const meals=sortedMeals().filter(m=>m.ts>=start&&m.ts<=now);
+  const mealDates=[...new Set(meals.map(m=>m.date||isoDate(m.ts)))];
+  const appetite=(state.appetiteLogs||[]).filter(x=>Number(x.ts)>=start&&Number(x.ts)<=now);
+  const intervals=fastingIntervals(50).filter(x=>Number(x.to.ts)>=start&&Number(x.to.ts)<=now);
+  const kcal=meals.reduce((a,m)=>a+Number(m.kcal||0),0);
+  const hungerAvg=appetite.length?appetite.reduce((a,x)=>a+Number(x.hunger||0),0)/appetite.length:null;
+  const satietyAvg=appetite.length?appetite.reduce((a,x)=>a+Number(x.satiety||0),0)/appetite.length:null;
+  const fastingAvg=intervals.length?intervals.reduce((a,x)=>a+x.hours,0)/intervals.length:null;
+  return {meals,mealDates,appetite,intervals,kcal,hungerAvg,satietyAvg,fastingAvg,avgKcal:mealDates.length?kcal/mealDates.length:0};
+}
+function topReason(logs){
+  const counts={}; (logs||[]).forEach(x=>counts[x.reason]=(counts[x.reason]||0)+1);
+  return Object.entries(counts).sort((a,b)=>b[1]-a[1])[0]||null;
+}
+function commonMealHour(meals){
+  const counts={}; (meals||[]).forEach(m=>{const h=String(m.time||'').slice(0,2); if(/^\d{2}$/.test(h)) counts[h]=(counts[h]||0)+1;});
+  const top=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0]; return top?Number(top[0]):null;
 }
 
 
@@ -1496,15 +1617,21 @@ function saveQuickDaily(){
   const ex=rawExercise===''?0:finiteNumber(rawExercise);
   if(w!==null && !inRange(w,30,300)){ alert('体重は30〜300kgの範囲で入力してください。'); return; }
   if(ex===null || ex<0 || ex>5000){ alert('運動消費は0〜5000kcalの範囲で入力してください。'); return; }
+  if(w===null && rawExercise===''){ showToast('体重か運動消費を入力してください'); return; }
   if(w!==null){
+    const today=isoDate();
+    state.weights=state.weights.filter(x=>isoDate(x.ts)!==today);
     state.weights.push({value:w,ts:Date.now()});
     state.weights=state.weights.filter(x=>x && inRange(x.value,30,300) && Number.isFinite(Number(x.ts))).slice(-1000);
     state.profile.weight=w;
   }
   state.exerciseKcal=ex;
+  const today=isoDate();
+  state.dailyMetrics[today]={...(state.dailyMetrics[today]||{}),exerciseKcal:ex,updatedAt:Date.now()};
   quickWeight.value=''; quickExercise.value='';
   save();
   render();
+  showToast('今日の記録を保存しました');
 }
 
 function currentFoodTotal(){
@@ -1802,7 +1929,19 @@ function render(){
   const autoMission=autoMissionDecision();
   missionText.textContent=autoMission.mission;
   autoMissionReason.textContent=autoMission.reason;
-  missionCheck.textContent=state.success>0?'✓':'○';
+  const todayKey=isoDate();
+  const todayMealDone=mealsForDate(todayKey).length>0;
+  const todayWeightDone=(state.weights||[]).some(w=>isoDate(w.ts)===todayKey);
+  const todayAppetiteDone=(state.appetiteLogs||[]).some(x=>isoDate(x.ts)===todayKey);
+  const todayDoneCount=[todayMealDone,todayWeightDone,todayAppetiteDone].filter(Boolean).length;
+  todayMealCheck.textContent=todayMealDone?'✓':'○';
+  todayWeightCheck.textContent=todayWeightDone?'✓':'○';
+  todayAppetiteCheck.textContent=todayAppetiteDone?'✓':'○';
+  todayProgressText.textContent=todayDoneCount+'/3';
+  todayProgressHint.textContent=todayDoneCount===0?'全部やる必要はありません。まず1つだけ記録しましょう。':(todayDoneCount<3?'すでに'+todayDoneCount+'つ記録できています。十分前進しています。':'今日の基本記録はそろいました。あとは無理せず続けましょう。');
+  const doneMission=missionDoneToday();
+  missionCheck.textContent=doneMission?'✓':'○';
+  if(missionButton){ missionButton.textContent=doneMission?'今日は達成済み':'できた！'; missionButton.disabled=doneMission; }
   levelText.textContent='Lv.'+state.level;
   levelBar.style.width=Math.min(100,20+state.success*12)+'%';
   levelMessage.textContent=state.success<3?'まずは3回成功を作ります。':(state.success%3===0?'レベルアップ候補です。上げなくてもOK。':'今の難易度を継続中。');
@@ -1823,15 +1962,20 @@ function render(){
         <button class="btn ghost" style="width:auto;padding:5px 8px;font-size:10px" onclick="openEditMeal('${m.id}')">編集</button>
         <button class="btn ghost" style="width:auto;padding:5px 8px;font-size:10px;color:var(--red)" onclick="deleteMeal('${m.id}')">削除</button>
       </div>
-    </div><b>${m.kcal}</b></div>`).join(''):'まだ記録はありません。';
+    </div><b>${m.kcal}</b></div>`).join(''):'<div class="empty-state">この日の食事記録はまだありません。<br><button class="btn primary" style="margin-top:10px" onclick="go(\'manualMeal\')">最初の1件を記録</button></div>';
   const pfc=pfcTotals();
   proteinTotal.textContent=pfc.p.toFixed(0)+'g';
   fatTotal.textContent=pfc.f.toFixed(0)+'g';
   carbTotal.textContent=pfc.c.toFixed(0)+'g';
-  hunger.value=state.hunger;satiety.value=state.satiety;reason.value=state.reason;
+  hunger.value=state.hunger; satiety.value=state.satiety; reason.value=state.reason;
+  hungerValue.textContent=state.hunger; satietyValue.textContent=state.satiety;
+  appetiteHistory.innerHTML=(state.appetiteLogs||[]).length ? state.appetiteLogs.slice(-5).reverse().map(x=>`<div class="item"><span>${new Date(x.ts).toLocaleDateString('ja-JP',{month:'numeric',day:'numeric'})} ${new Date(x.ts).toTimeString().slice(0,5)}<br><small>${x.reason}</small></span><b>空腹${x.hunger} / 満足${x.satiety}</b></div>`).join('') : 'まだ記録はありません。';
   fastingTextEl=fastingText; // no-op safeguard
   document.getElementById('fastingText').textContent=calculateFastingText();
-  ifResult.textContent=state.ifthen?'保存済み：'+state.ifthen:'';
+  const intervals=fastingIntervals(5);
+  fastingHistory.innerHTML=intervals.length?intervals.slice().reverse().map(x=>`<div class="item"><span>${isoDate(x.to.ts)} ${x.to.time||''}</span><b>${x.hours.toFixed(1)}時間</b></div>`).join(''):'食事が2回以上あると表示します。';
+  ifResult.textContent=state.ifthen?'最新：'+state.ifthen:'';
+  ifThenHistory.innerHTML=(state.ifThenPlans||[]).length?state.ifThenPlans.slice().reverse().map(x=>`<div class="item"><span>${x.text}</span><button class="btn ghost" style="width:auto;padding:5px 8px" onclick="deleteIfThenPlan('${x.id}')">削除</button></div>`).join(''):'まだありません。';
 
   if(state.mode==='easy'){minGoal.textContent='30秒';stdGoal.textContent='1分';plusGoal.textContent='3分';modeMsg.textContent='EASY MODE：今日は最低ラインだけでOK。';}
   else if(state.mode==='up'){minGoal.textContent='2分';stdGoal.textContent='7分';plusGoal.textContent='12分';modeMsg.textContent='少しUP：ほんの少しだけ負荷を上げます。';}
@@ -1841,8 +1985,27 @@ function render(){
   const totalAll=state.meals.reduce((s,m)=>s+(m.kcal||0),0);
   const days=Math.max(1,mealDays.length);
   const avg=state.meals.length?Math.round(totalAll/days):0;
-  avgKcal.textContent=avg;
-  tdeeDiff.textContent=p.tdee?(avg-p.tdee):'--';
+  const ws=weeklySummary();
+  avgKcal.textContent=Math.round(ws.avgKcal||0);
+  tdeeDiff.textContent=p.tdee?Math.round((ws.avgKcal||0)-p.tdee):'--';
+  weeklyMealDays.textContent=ws.mealDates.length+'/7';
+  weeklyAppetiteCount.textContent=ws.appetite.length+'件';
+  weeklyHungerAvg.textContent=ws.hungerAvg==null?'--':ws.hungerAvg.toFixed(1)+'/5';
+  weeklyFastingAvg.textContent=ws.fastingAvg==null?'--':ws.fastingAvg.toFixed(1)+'h';
+  const topR=topReason(ws.appetite);
+  weeklyInsight.innerHTML=[
+    ws.mealDates.length?`食事を記録した日は <b>${ws.mealDates.length}/7日</b>。`:'まず食事を1回記録すると週間レビューが始まります。',
+    topR?`食べた理由で最も多いのは <b>${topR[0]}</b>（${topR[1]}回）。`:'',
+    ws.fastingAvg!=null?`食事間隔の平均は <b>${ws.fastingAvg.toFixed(1)}時間</b>。長さの良し悪しではなく、空腹・満足度と一緒に見ます。`:''
+  ].filter(Boolean).join('<br>');
+  const weightRecent=(state.weights||[]).filter(x=>Number(x.ts)>=lastNDaysStart(7)).length;
+  const completeness=Math.min(100,Math.round((Math.min(7,ws.mealDates.length)/7*50)+(Math.min(4,ws.appetite.length)/4*25)+(Math.min(3,weightRecent)/3*25)));
+  weeklyCompletenessText.textContent=completeness+'%';
+  weeklyCompletenessBar.style.width=completeness+'%';
+  if(ws.mealDates.length<3) weeklyNextAction.textContent='まず3日分だけ食事を記録すると、週の傾向が見えやすくなります。';
+  else if(ws.appetite.length<2) weeklyNextAction.textContent='食事記録は十分です。次は空腹・満足度を2回記録して、食欲パターンを追加しましょう。';
+  else if(weightRecent<2) weeklyNextAction.textContent='食事と食欲の材料が揃っています。体重をあと2回ほど記録すると傾向線が使えます。';
+  else weeklyNextAction.textContent='レビュー材料が揃っています。今週は大きく変えず、提案を1つだけ選んで試してください。';
   const rec=autoRecommendation();
   if(wchg!=null){
     analysisResult.textContent=rec.label;
@@ -1857,9 +2020,22 @@ function render(){
     analysisResult.textContent='準備中';
     analysisMessage.textContent='まずは3回の成功を作りましょう。';
   }
+  const allApp=state.appetiteLogs||[];
+  const topAllReason=topReason(allApp);
+  const commonHour=commonMealHour(state.meals);
+  const allIntervals=fastingIntervals(100);
+  const avgInterval=allIntervals.length?allIntervals.reduce((a,x)=>a+x.hours,0)/allIntervals.length:null;
   patternText.textContent=state.meals.length>=3
-    ?`食事記録は${state.meals.length}件。空腹度${state.hunger}/5、満足度${state.satiety}/5。記録が増えるほど食事時間・空腹・摂取量の傾向を比較できます。`
-    :'まだ十分なデータがありません。3食以上記録すると簡易分析を始めます。';
+    ?`食事${state.meals.length}件・食欲${allApp.length}件の記録から傾向を見ています。`
+    :'まだ十分なデータがありません。食事を3回以上記録すると簡易分析を始めます。';
+  const evidencePoints=Math.min(6,state.meals.length)+Math.min(4,allApp.length)+Math.min(3,allIntervals.length);
+  patternConfidence.textContent=evidencePoints>=10?'十分':(evidencePoints>=5?'増えてきた':'少ない');
+  patternDetails.innerHTML=[
+    commonHour!=null?`最も記録が多い食事時間帯：<b>${String(commonHour).padStart(2,'0')}時台</b>`:'食事時間帯：記録待ち',
+    topAllReason?`多い食事理由：<b>${topAllReason[0]}</b>（${topAllReason[1]}回）`:'食事理由：記録待ち',
+    allApp.length?`平均空腹 <b>${(allApp.reduce((a,x)=>a+Number(x.hunger||0),0)/allApp.length).toFixed(1)}/5</b>・平均満足 <b>${(allApp.reduce((a,x)=>a+Number(x.satiety||0),0)/allApp.length).toFixed(1)}/5</b>`:'空腹・満足度：記録待ち',
+    avgInterval!=null?`平均食事間隔：<b>${avgInterval.toFixed(1)}時間</b>`:'食事間隔：食事2回以上で表示'
+  ].join('<br>');
 
   quickWeight.value=p.weight||'';
   quickExercise.value=state.exerciseKcal||'';
@@ -1883,6 +2059,10 @@ function render(){
     :'まだ記録はありません。';
 
   profileSummary.innerHTML=p.tdee?`BMR 約 <b>${p.bmr} kcal</b><br>TDEE 約 <b>${p.tdee} kcal/日</b><br>${p.weight}kg → 目標 ${p.target}kg`:'プロフィール未設定';
+  myMealCount.textContent=(state.meals||[]).length;
+  myWeightCount.textContent=(state.weights||[]).length;
+  myAppetiteCount.textContent=(state.appetiteLogs||[]).length;
+  myIfThenCount.textContent=(state.ifThenPlans||[]).length;
   const rr=recoveryPlanSuggestion();
   recoverySuggestion.innerHTML=`<b>${rr.type}</b><br>${rr.text}`;
   if(state.pendingPhoto){
@@ -1894,6 +2074,9 @@ function render(){
 }
 if(state.exerciseKcal==null) state.exerciseKcal=0;
 if(!Array.isArray(state.weights)) state.weights=[];
+if(!Array.isArray(state.appetiteLogs)) state.appetiteLogs=[];
+if(!Array.isArray(state.ifThenPlans)) state.ifThenPlans=[];
+if(!state.dailyMetrics||typeof state.dailyMetrics!=='object') state.dailyMetrics={};
 if(state.fatigue==null) state.fatigue=2;
 if(state.recoveryType==null) state.recoveryType='';
 if(state.pendingPhoto==null) state.pendingPhoto='';

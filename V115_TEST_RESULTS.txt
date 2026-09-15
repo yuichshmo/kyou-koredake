@@ -1,0 +1,25 @@
+PASS | HTML parsed
+PASS | No duplicate IDs
+PASS | 15+ screens
+PASS | Schema v3
+PASS | Mission completion history
+PASS | Mission duplicate guard
+PASS | Today meal status
+PASS | Today weight status
+PASS | Today appetite status
+PASS | Today progress count
+PASS | Blank quick-save guard
+PASS | Same-day weight replacement
+PASS | Mission button disable
+PASS | Meal save function
+PASS | Appetite save function
+PASS | Weekly summary
+PASS | Pattern analysis
+PASS | PWA manifest exists
+PASS | Service worker v115
+PASS | PWA 192 icon exists
+PASS | PWA 512 icon exists
+PASS | Legal pages exist
+
+TOTAL: 22/22 PASS
+PASS | Local HTTP index/manifest/service-worker/icons/legal pages all return 200
