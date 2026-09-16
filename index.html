@@ -392,7 +392,7 @@ button,.tab{touch-action:manipulation}
 
 
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#21b55b">
+<meta name="theme-color" content="#78977c">
 <meta name="description" content="今日の小さな一歩を積み重ねる、食事・体重・習慣のシンプル記録アプリ。">
 <meta property="og:type" content="website">
 <meta property="og:title" content="今日これだけ。">
@@ -400,14 +400,65 @@ button,.tab{touch-action:manipulation}
 <meta property="og:image" content="assets/share-preview.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="assets/favicon-64.png">
-<meta name="theme-color" content="#f7dfe8">
+<meta name="theme-color" content="#f7f4ee">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="今日これだけ">
 <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
 
+
+<style id="v116-sage-editorial-design">
+:root{
+  --v116-bg:#f7f4ee;
+  --v116-surface:#fffdf9;
+  --v116-ink:#26332d;
+  --v116-muted:#788079;
+  --v116-sage:#78977c;
+  --v116-sage-dark:#58755f;
+  --v116-sage-soft:#edf3ec;
+  --v116-beige:#eee5d8;
+  --v116-line:#e8e3dc;
+  --v116-warm:#c9a77f;
+}
+body[data-design-freeze="approved-master-v1"]{background:linear-gradient(180deg,#f7f4ee 0%,#fbfaf7 48%,#f3f6f1 100%);color:var(--v116-ink)}
+body[data-design-freeze="approved-master-v1"] .phone{background:var(--v116-surface)}
+body[data-design-freeze="approved-master-v1"] header{background:rgba(255,253,249,.95);border-bottom-color:var(--v116-line)}
+body[data-design-freeze="approved-master-v1"] .brand{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;font-size:20px;letter-spacing:.08em;color:var(--v116-ink);font-weight:800}
+body[data-design-freeze="approved-master-v1"] .date,body[data-design-freeze="approved-master-v1"] .muted,body[data-design-freeze="approved-master-v1"] label{color:var(--v116-muted)}
+body[data-design-freeze="approved-master-v1"] .card{background:#fff;border-color:var(--v116-line);border-radius:22px;box-shadow:0 10px 30px rgba(68,78,70,.07)}
+body[data-design-freeze="approved-master-v1"] .stat{background:#fff;border-color:var(--v116-line);border-radius:18px}
+body[data-design-freeze="approved-master-v1"] .btn{border-radius:18px;min-height:50px}
+body[data-design-freeze="approved-master-v1"] .btn.primary,body[data-design-freeze="approved-master-v1"] .pretty-btn{background:linear-gradient(135deg,var(--v116-sage),var(--v116-sage-dark));box-shadow:0 8px 18px rgba(88,117,95,.18);color:#fff}
+body[data-design-freeze="approved-master-v1"] .btn.soft{background:var(--v116-sage-soft);color:var(--v116-sage-dark)}
+body[data-design-freeze="approved-master-v1"] .btn.ghost{border-color:var(--v116-line);color:var(--v116-ink);background:#fff}
+body[data-design-freeze="approved-master-v1"] .tabs{background:rgba(255,253,249,.97);border-top-color:var(--v116-line)}
+body[data-design-freeze="approved-master-v1"] .tab{color:#90958f}
+body[data-design-freeze="approved-master-v1"] .tab.active{color:var(--v116-sage-dark)}
+body[data-design-freeze="approved-master-v1"] input,body[data-design-freeze="approved-master-v1"] select{border-color:var(--v116-line);background:#fffdfb;color:var(--v116-ink)}
+body[data-design-freeze="approved-master-v1"] .notice{background:#f4efe7;color:#6f655b}
+body[data-design-freeze="approved-master-v1"] .today-hero{background:linear-gradient(145deg,#f6f0e7 0%,#fffdf9 45%,#eaf1e9 100%);border-color:var(--v116-line);box-shadow:0 14px 34px rgba(83,92,83,.08)}
+body[data-design-freeze="approved-master-v1"] .today-mini{color:var(--v116-sage-dark);background:rgba(255,255,255,.76)}
+body[data-design-freeze="approved-master-v1"] .today-title{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--v116-ink);font-size:29px;letter-spacing:.02em}
+body[data-design-freeze="approved-master-v1"] .today-copy{color:var(--v116-muted)}
+body[data-design-freeze="approved-master-v1"] .today-focus{background:rgba(255,255,255,.84);border-color:#fff;border-radius:22px}
+body[data-design-freeze="approved-master-v1"] .today-focus-label{color:var(--v116-sage-dark)}
+body[data-design-freeze="approved-master-v1"] .today-mission{color:var(--v116-ink)}
+body[data-design-freeze="approved-master-v1"] .soft-chip{background:#f1eee7;color:#776c61}
+body[data-design-freeze="approved-master-v1"] #record > .row .btn.primary{background:linear-gradient(135deg,var(--v116-sage),var(--v116-sage-dark))}
+body[data-design-freeze="approved-master-v1"] #record > .row .btn.soft{background:#f2eee7;color:var(--v116-ink)}
+body[data-design-freeze="approved-master-v1"] .pill{background:var(--v116-sage-soft);color:var(--v116-sage-dark)}
+body[data-design-freeze="approved-master-v1"] .swap-new{background:#eef4ed}
+body[data-design-freeze="approved-master-v1"] .swap-old{background:#f7f1e9}
+body[data-design-freeze="approved-master-v1"] .iconbox{background:#f3efe8}
+body[data-design-freeze="approved-master-v1"] .lv.active{background:#edf3ec;border-color:#cddbcf}
+body[data-design-freeze="approved-master-v1"] .progress-ring{background:conic-gradient(var(--v116-sage) 0 36%,#b9cbb9 36% 68%,#eee9e2 68%)}
+.section-head h2{font-size:21px;color:var(--v116-ink);font-weight:800;letter-spacing:.01em}
+.card h3{color:#38463f}.header-back{background:#eef3ed;color:var(--v116-sage-dark)}
+#toast{background:#33453b}
+</style>
+
 </head>
-<body data-design-freeze="approved-master-v1" data-app-version="v114-ux-flow-hardening">
+<body data-design-freeze="approved-master-v1" data-app-version="v116-sage-editorial">
 <div id="networkStatus" role="status" aria-live="polite" hidden></div>
 <div id="toast" role="status" aria-live="polite"></div>
 <div class="phone">
@@ -2133,7 +2184,7 @@ if(!state.onboardingDone){
 </div>
 <script>
 if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js').catch(()=>{}));
+  window.addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js?v=116').catch(()=>{}));
 }
 </script>
 

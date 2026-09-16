@@ -1,4 +1,4 @@
-const CACHE='kyou-koredake-pages-v115';
+const CACHE='kyou-koredake-pages-v116-sage-editorial';
 const ASSETS=['./','./index.html','./privacy.html','./terms.html','./support.html','./manifest.webmanifest','./assets/icon-192.png','./assets/icon-512.png','./assets/apple-touch-icon.png','./assets/favicon-64.png','./assets/share-preview.png'];
 self.addEventListener('install',event=>{
   self.skipWaiting();
@@ -12,22 +12,15 @@ self.addEventListener('activate',event=>{
 });
 self.addEventListener('fetch',event=>{
   if(event.request.method!=='GET') return;
-  const isNavigation=event.request.mode==='navigate';
-  if(isNavigation){
-    event.respondWith(fetch(event.request).then(response=>{
-      if(response && response.ok){
-        const copy=response.clone();
-        caches.open(CACHE).then(cache=>cache.put(event.request,copy));
-      }
+  if(event.request.mode==='navigate'){
+    event.respondWith(fetch(event.request,{cache:'no-store'}).then(response=>{
+      if(response&&response.ok){const copy=response.clone();caches.open(CACHE).then(cache=>cache.put('./index.html',copy));}
       return response;
-    }).catch(()=>caches.match(event.request).then(r=>r||caches.match('./index.html'))));
+    }).catch(()=>caches.match('./index.html')));
     return;
   }
-  event.respondWith(caches.match(event.request).then(cached=>cached||fetch(event.request).then(response=>{
-    if(response && response.ok){
-      const copy=response.clone();
-      caches.open(CACHE).then(cache=>cache.put(event.request,copy));
-    }
+  event.respondWith(fetch(event.request,{cache:'no-store'}).then(response=>{
+    if(response&&response.ok){const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(event.request,copy));}
     return response;
-  })));
+  }).catch(()=>caches.match(event.request)));
 });

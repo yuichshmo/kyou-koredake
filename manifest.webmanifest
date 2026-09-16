@@ -2,10 +2,10 @@
   "name": "今日これだけ。ダイエット",
   "short_name": "今日これだけ",
   "description": "大きな目標を小さな行動に分け、食事・体重・習慣をやさしく記録するダイエットアプリ。",
-  "start_url": "./index.html",
+  "start_url": "./?v=116",
   "display": "standalone",
-  "background_color": "#f8fcf7",
-  "theme_color": "#21b55b",
+  "background_color": "#f7f4ee",
+  "theme_color": "#78977c",
   "lang": "ja",
   "icons": [
     {
